@@ -164,14 +164,17 @@ html.theme-switching *,html.theme-switching *::before,html.theme-switching *::af
   }
 
   var themeTimer = null;
+  var lastThemeToggleAt = 0;
 
-  function applyTheme(next, persist) {
+  function applyTheme(next, persist, immediate) {
     var theme = next === 'dark' ? 'dark' : 'light';
     var root = document.documentElement;
-    root.classList.add('theme-switching');
+    if (immediate) {
+      root.classList.add('theme-switching');
+      clearTimeout(themeTimer);
+      themeTimer = setTimeout(function () { root.classList.remove('theme-switching'); }, 260);
+    }
     root.dataset.theme = theme;
-    clearTimeout(themeTimer);
-    themeTimer = setTimeout(function () { root.classList.remove('theme-switching'); }, 220);
     if (persist) { try { localStorage.setItem(THEME_KEY, theme); } catch (e) {} }
     var meta = document.getElementById('themeColor');
     if (meta) meta.setAttribute('content', theme === 'dark' ? '#0f0f10' : '#ffffff');
@@ -346,7 +349,10 @@ html.theme-switching *,html.theme-switching *::before,html.theme-switching *::af
   });
   var themeToggle = document.getElementById('themeToggle');
   if (themeToggle) themeToggle.addEventListener('click', function () {
-    applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark', true);
+    var now = Date.now();
+    var immediate = now - lastThemeToggleAt < 260;
+    lastThemeToggleAt = now;
+    applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark', true, immediate);
   });
   try {
     var media = matchMedia('(prefers-color-scheme: dark)');
