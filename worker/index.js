@@ -352,7 +352,7 @@ async function renderPage(app, origin) {
   } catch (error) {}
 })();
 </script>
-<link rel="stylesheet" href="${PAGES_BASE}/styles.css?v=32">
+<link rel="stylesheet" href="${PAGES_BASE}/styles.css?v=33">
 </head>
 <body class="search-active" data-app-type="${escapeHtml(app.targetType)}">
 <div class="top-controls">
@@ -411,8 +411,8 @@ async function renderPage(app, origin) {
           <button class="icon-btn" id="copySource" type="button" data-copy="${escapeHtml(pageUrl)}">复制</button>
         </div>
         <div class="source-box">
-          <span class="label">文件名</span>
-          <code><a href="${escapeHtml(app.targetUrl)}" title="${escapeHtml(app.targetUrl)}">${escapeHtml(filename)}</a></code>
+          <span class="label" data-i18n="packageName">包名</span>
+          <code>${escapeHtml(app.pkg)}</code>
         </div>
       </div>
     </div>
@@ -432,6 +432,7 @@ async function renderPage(app, origin) {
       hashSource: '分类索引哈希', signedSource: '页面签名链接', unknown: '未知',
       addObtainium: '在 Obtainium 中添加', copyDeep: '复制深链', downloadApk: '下载 APK', copied: '已复制',
       htmlSource: 'HTML 源',
+      packageName: '包名',
       qrHint: '扫码在手机上打开并添加',
       hint: 'APK 由手机直连小米 CDN 下载；Obtainium 每次检查都会重新解析这个 Worker 页面。',
       foot: '由 Cloudflare Worker 实时解析 · {base}'
@@ -443,6 +444,7 @@ async function renderPage(app, origin) {
       hashSource: '分類索引雜湊', signedSource: '頁面簽名連結', unknown: '未知',
       addObtainium: '在 Obtainium 中加入', copyDeep: '複製深層連結', downloadApk: '下載 APK', copied: '已複製',
       htmlSource: 'HTML 來源',
+      packageName: '套件名稱',
       qrHint: '掃碼在手機上開啟並加入',
       hint: 'APK 由手機直連小米 CDN 下載；Obtainium 每次檢查都會重新解析這個 Worker 頁面。',
       foot: '由 Cloudflare Worker 即時解析 · {base}'
@@ -454,6 +456,7 @@ async function renderPage(app, origin) {
       hashSource: 'Category index hash', signedSource: 'Signed page URL', unknown: 'Unknown',
       addObtainium: 'Add in Obtainium', copyDeep: 'Copy deep link', downloadApk: 'Download APK', copied: 'Copied',
       htmlSource: 'HTML source',
+      packageName: 'Package',
       qrHint: 'Scan to open and add on your phone',
       hint: 'The APK downloads directly from Xiaomi CDN on your phone; Obtainium re-resolves this Worker page on every check.',
       foot: 'Resolved live by Cloudflare Worker · {base}'

@@ -753,6 +753,7 @@ body.modal-open { overflow: hidden; }
   .result-actions { flex: 1 0 100%; width: auto; }
   .result-actions .btn { flex: 1; }
   .meta-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .meta-grid .meta-item:last-child { grid-column: 1 / -1; }
   .result-body { grid-template-columns: 1fr; }
   .s-cat { display: none; }
 }
