@@ -10,6 +10,7 @@ on:
     paths:
       - 'packages.json'
       - 'scripts/export-pages.mjs'
+      - 'scripts/pages-home.html'
       - 'lib/**'
       - 'public/**'
       - 'data/categories.json'
