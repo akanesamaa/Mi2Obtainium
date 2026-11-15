@@ -1,12 +1,12 @@
-@import url("/fonts/manrope/Manrope.css");
-@import url("/fonts/noto-sans-sc/NotoSansSC.css");
+@import url("fonts/manrope/Manrope.css");
+@import url("fonts/noto-sans-sc/NotoSansSC.css");
 
 @font-face {
   font-family: "Google Sans";
   font-style: normal;
   font-weight: 400 700;
   font-display: swap;
-  src: url("/fonts/GoogleSans-var.woff2") format("woff2");
+  src: url("fonts/GoogleSans-var.woff2") format("woff2");
 }
 
 :root {

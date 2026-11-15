@@ -354,7 +354,7 @@ async function renderPage(app, origin) {
   } catch (error) {}
 })();
 </script>
-<link rel="stylesheet" href="${PAGES_BASE}/styles.css?v=29">
+<link rel="stylesheet" href="${PAGES_BASE}/styles.css?v=30">
 </head>
 <body class="search-active" data-app-type="${escapeHtml(app.targetType)}">
 <div class="top-controls">
