@@ -422,10 +422,6 @@ async function renderPage(app, origin) {
   </section>
 
   <footer class="site-foot">
-    <a class="foot-link" href="${PAGES_BASE}/#about">关于</a>
-    <span aria-hidden="true">·</span>
-    <a class="foot-link" href="${PAGES_BASE}/#how">原理</a>
-    <span aria-hidden="true">·</span>
     <a class="foot-link" href="https://github.com/akanesamaa/Mi2Obtainium" target="_blank" rel="noreferrer">GitHub ↗</a>
   </footer>
 </main>
