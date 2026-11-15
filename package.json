@@ -5,7 +5,6 @@
   "type": "module",
   "description": "Mi2Obtainium turns Xiaomi App Store web links into Obtainium-friendly pages",
   "scripts": {
-    "start": "node server.js",
     "pages:build": "node scripts/export-pages.mjs",
     "worker:dev": "npx wrangler dev",
     "worker:deploy": "npx wrangler deploy"

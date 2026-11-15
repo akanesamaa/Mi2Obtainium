@@ -1,3 +1,5 @@
+import QRCode from 'qrcode/lib/browser.js';
+
 const BASE = 'https://app.mi.com';
 const CDN_HOST = 'https://f5.market.xiaomi.com/download/';
 const PAGES_BASE = 'https://akanesamaa.github.io/Mi2Obtainium';
@@ -277,6 +279,17 @@ function escapeHtml(value) {
     .replace(/"/g, '&quot;');
 }
 
+async function qrDataUri(text) {
+  const svg = await QRCode.toString(text, {
+    type: 'svg',
+    margin: 1,
+    width: 260,
+    errorCorrectionLevel: 'M',
+    color: { dark: '#1b120c', light: '#ffffff' },
+  });
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
+
 function buildConfig(app, origin) {
   const pageUrl = `${origin}/o/${encodeURIComponent(app.pkg)}`;
   const filename = `${app.pkg}-${app.version}.apk`;
@@ -300,8 +313,9 @@ function buildConfig(app, origin) {
   };
 }
 
-function renderPage(app, origin) {
+async function renderPage(app, origin) {
   const config = buildConfig(app, origin);
+  const qrUri = await qrDataUri(`${PAGES_BASE}/?pkg=${encodeURIComponent(app.pkg)}`);
   const deepLink = `obtainium://app/${encodeURIComponent(JSON.stringify(config))}`;
   const pageUrl = config.url;
   const filename = `${app.pkg}-${app.version}.apk`;
@@ -388,7 +402,11 @@ function renderPage(app, origin) {
       <div class="meta-item"><span data-i18n="sourceType">直链来源</span><strong id="sourceValue" data-type="${escapeHtml(app.targetType)}">${typeLabel}</strong></div>
     </div>
 
-    <div class="result-body no-qr">
+    <div class="result-body">
+      <aside class="qr-side">
+        <img src="${qrUri}" alt="${escapeHtml('扫码在手机上打开并添加')}">
+        <p data-i18n="qrHint">扫码在手机上打开并添加</p>
+      </aside>
       <div class="result-main">
         <div class="source-box">
           <span class="label" data-i18n="htmlSource">HTML 源</span>
@@ -399,7 +417,6 @@ function renderPage(app, origin) {
           <span class="label">APK</span>
           <code><a href="${escapeHtml(app.targetUrl)}">${escapeHtml(filename)}</a></code>
         </div>
-        <p class="byline" id="hint">APK 由手机直连小米 CDN 下载；Obtainium 每次检查都会重新解析这个 Worker 页面。</p>
       </div>
     </div>
   </section>
@@ -425,6 +442,7 @@ function renderPage(app, origin) {
       hashSource: '分类索引哈希', signedSource: '页面签名链接', unknown: '未知',
       addObtainium: '在 Obtainium 中添加', copyDeep: '复制深链', downloadApk: '下载 APK', copied: '已复制',
       htmlSource: 'HTML 源',
+      qrHint: '扫码在手机上打开并添加',
       hint: 'APK 由手机直连小米 CDN 下载；Obtainium 每次检查都会重新解析这个 Worker 页面。',
       foot: '由 Cloudflare Worker 实时解析 · {base}'
     },
@@ -435,6 +453,7 @@ function renderPage(app, origin) {
       hashSource: '分類索引雜湊', signedSource: '頁面簽名連結', unknown: '未知',
       addObtainium: '在 Obtainium 中加入', copyDeep: '複製深層連結', downloadApk: '下載 APK', copied: '已複製',
       htmlSource: 'HTML 來源',
+      qrHint: '掃碼在手機上開啟並加入',
       hint: 'APK 由手機直連小米 CDN 下載；Obtainium 每次檢查都會重新解析這個 Worker 頁面。',
       foot: '由 Cloudflare Worker 即時解析 · {base}'
     },
@@ -445,6 +464,7 @@ function renderPage(app, origin) {
       hashSource: 'Category index hash', signedSource: 'Signed page URL', unknown: 'Unknown',
       addObtainium: 'Add in Obtainium', copyDeep: 'Copy deep link', downloadApk: 'Download APK', copied: 'Copied',
       htmlSource: 'HTML source',
+      qrHint: 'Scan to open and add on your phone',
       hint: 'The APK downloads directly from Xiaomi CDN on your phone; Obtainium re-resolves this Worker page on every check.',
       foot: 'Resolved live by Cloudflare Worker · {base}'
     }
@@ -488,8 +508,6 @@ function renderPage(app, origin) {
     if (size && size.getAttribute('data-empty') === '1') size.textContent = t('unknown');
     var updated = document.getElementById('updatedValue');
     if (updated && updated.getAttribute('data-empty') === '1') updated.textContent = t('unknown');
-    var hint = document.getElementById('hint');
-    if (hint) hint.textContent = t('hint');
     var group = document.querySelector('.lang-switch');
     if (group) group.setAttribute('aria-label', t('languageGroup'));
     document.querySelectorAll('[data-lang]').forEach(function (button) {
@@ -623,7 +641,7 @@ async function handle(request) {
   const pkg = decodeURIComponent(match[1]);
   try {
     const { app } = await resolveApp(pkg);
-    const html = renderPage(app, `${url.protocol}//${url.host}`);
+    const html = await renderPage(app, `${url.protocol}//${url.host}`);
     return new Response(html, {
       headers: {
         'Content-Type': 'text/html; charset=utf-8',

@@ -599,8 +599,7 @@ body.modal-open { overflow: hidden; }
   border-top: 1px solid var(--line);
 }
 
-.result-body.no-qr { grid-template-columns: minmax(0, 1fr); }
-.result-body.no-qr .source-box + .source-box { margin-top: 8px; }
+.source-box + .source-box { margin-top: 8px; }
 
 .result-main { min-width: 0; }
 
