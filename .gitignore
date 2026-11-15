@@ -1,0 +1,10 @@
+node_modules/
+data/apps.json
+.pages-cache/
+_site/
+*.log
+.DS_Store
+data/search-index.json
+data/github.json
+
+

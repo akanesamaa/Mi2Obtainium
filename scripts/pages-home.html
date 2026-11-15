@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta id="themeColor" name="theme-color" content="#ffffff">
+<meta id="metaDescription" name="description" content="粘贴小米应用商店链接、包名或应用名称，生成 Obtainium 可直接读取的更新源。">
+<title>Mi2Obtainium</title>
+<link id="favicon" rel="icon" href="favicon-light.svg?v=3" type="image/svg+xml">
+<script>
+(function () {
+  try {
+    var theme = localStorage.getItem('mi-theme');
+    if (theme !== 'light' && theme !== 'dark') theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = theme;
+    var favicon = document.getElementById('favicon');
+    if (favicon) favicon.href = theme === 'dark' ? 'favicon.svg?v=5' : 'favicon-light.svg?v=3';
+    var lang = localStorage.getItem('mi-lang');
+    if (lang !== 'zh-Hans' && lang !== 'zh-Hant' && lang !== 'en') {
+      lang = 'zh-Hans';
+      var list = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'zh-CN'];
+      for (var i = 0; i < list.length; i += 1) {
+        var code = String(list[i] || '').toLowerCase();
+        if (code.indexOf('zh') === 0) lang = /hant|tw|hk|mo/.test(code) ? 'zh-Hant' : 'zh-Hans';
+        else lang = 'en';
+        break;
+      }
+    }
+    document.documentElement.lang = lang === 'zh-Hant' ? 'zh-Hant' : lang === 'en' ? 'en' : 'zh-CN';
+  } catch (error) {}
+})();
+</script>
+<style>
+@import url('fonts/manrope/Manrope.css');
+@import url('fonts/noto-sans-sc/NotoSansSC.css');
+@font-face{font-family:'Google Sans';font-style:normal;font-weight:400 700;font-display:swap;src:url('fonts/GoogleSans-var.woff2') format('woff2')}
+:root{color-scheme:light;--bg:#fff;--text:#0a0a0a;--muted:#6f6f6f;--muted2:#9a9a9a;--line:#e6e6e6;--soft:#f5f5f5;--soft2:#fafafa;--xiaomi:#ff6900;--obtainium:#7c4dff;--font:"Manrope","Noto Sans SC","Google Sans","Microsoft YaHei","PingFang SC",system-ui,sans-serif;--mono:"Cascadia Code",Consolas,monospace}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0f0f10;--text:#f3f3f1;--muted:#a5a5a0;--muted2:#777773;--line:#2b2b2e;--soft:#1a1a1c;--soft2:#141416}
+*{box-sizing:border-box}html{min-height:100%}body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;transition:background-color .18s ease,color .18s ease}
+a{color:inherit;text-decoration:none}button,input{font:inherit;color:inherit}button{cursor:pointer}::selection{background:var(--text);color:var(--bg)}
+.top-controls{position:absolute;top:17px;right:20px;z-index:40;display:flex;align-items:center;gap:8px}
+.lang-switch{display:flex;align-items:center;height:27px;padding:2px;border:1px solid var(--line);border-radius:6px;background:var(--soft)}
+.lang-switch button{height:100%;border:0;border-radius:4px;display:flex;align-items:center;justify-content:center;background:transparent;color:var(--muted);padding:0 8px;font-size:11px;line-height:1;white-space:nowrap}
+.lang-switch button:hover{color:var(--text)}.lang-switch button[aria-pressed="true"]{background:var(--bg);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.theme-toggle{width:27px;height:27px;padding:0;border:1px solid var(--line);border-radius:4px;display:grid;place-items:center;background:var(--bg);color:var(--text)}
+.theme-toggle:hover{background:var(--soft);border-color:var(--muted2)}.theme-toggle svg{width:15px;height:15px;display:block}.theme-toggle .icon-moon{display:none}
+:root[data-theme="dark"] .theme-toggle .icon-sun{display:none}:root[data-theme="dark"] .theme-toggle .icon-moon{display:block}
+.page{width:min(760px,calc(100% - 36px));margin:0 auto;padding:max(40px,calc(50vh - 80px)) 0 80px;transition:padding-top .5s cubic-bezier(.2,.7,.2,1)}
+body.search-active .page{padding-top:8vh}
+.masthead{text-align:center}.masthead h1{margin:0;font-size:42px;font-weight:700;line-height:1.1;letter-spacing:-1.6px}
+.title-xiaomi{color:var(--xiaomi)}.title-obtainium{color:var(--obtainium)}.title-arrow{display:inline-flex;align-items:center;justify-content:center;margin:0 .16em;color:var(--text);vertical-align:-.04em}.title-arrow svg{display:block;width:.78em;height:.78em}
+.search-section{position:relative;width:100%;max-width:640px;margin:30px auto 0}
+.urlbar{display:flex;align-items:center;gap:10px;padding:6px 6px 6px 14px;background:var(--bg);border:0;border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 10px 30px rgba(0,0,0,.1);transition:box-shadow .2s ease}
+.urlbar:focus-within{box-shadow:0 2px 6px rgba(0,0,0,.05),0 16px 42px rgba(0,0,0,.14)}
+.urlbar-icon{flex:0 0 auto;display:grid;place-items:center;color:var(--muted2)}
+.urlbar input{flex:1;min-width:0;border:0;outline:0;padding:12px 2px;background:transparent;font-size:16.5px;color:var(--text)}
+.urlbar input::placeholder{color:var(--muted2)}
+.urlbar button{flex:0 0 auto;width:44px;height:44px;border:0;border-radius:6px;display:grid;place-items:center;background:transparent;color:var(--text);line-height:1;transition:background .15s ease}
+.urlbar button:hover{background:var(--soft)}.urlbar button:active{background:var(--line)}
+.status{min-height:20px;max-width:640px;margin:10px auto 0;color:var(--muted2);font-size:11.5px;line-height:1.5}
+.results{display:none;width:100%;max-width:640px;margin:12px auto 0;background:var(--bg);border:1px solid var(--line);border-radius:10px;box-shadow:0 18px 45px -24px rgba(0,0,0,.3);overflow:hidden}
+.results.show{display:block}
+.item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;min-width:0}
+.item:last-child{border-bottom:0}.item:hover{background:var(--soft)}.item.disabled{opacity:.5}
+.icon{position:relative;width:38px;height:38px;flex:0 0 auto;border-radius:6px;overflow:hidden;background:var(--soft);display:grid;place-items:center;font-size:14px;font-weight:700;color:var(--muted)}
+.icon img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.body{flex:1;min-width:0}.body strong{display:block;font-size:14px;font-weight:600;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.body small{display:block;margin-top:1px;color:var(--muted2);font-family:var(--mono);font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cat{flex:0 0 auto;color:var(--muted2);font-size:10.5px}.empty{padding:22px 14px;color:var(--muted2);font-size:13px;text-align:center}
+:root[data-theme="dark"] .urlbar{border:1px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.2),0 10px 30px rgba(0,0,0,.28)}
+:root[data-theme="dark"] .urlbar:focus-within{border-color:var(--muted2);box-shadow:0 2px 6px rgba(0,0,0,.24),0 16px 42px rgba(0,0,0,.36)}
+:root[data-theme="dark"] .results{box-shadow:0 18px 45px -24px rgba(0,0,0,.9)}
+@media(max-width:720px){.top-controls{top:12px;right:14px;gap:6px}.lang-switch{height:25px}.lang-switch button{padding:0 7px;font-size:10.5px}.theme-toggle{width:25px;height:25px}.page{width:calc(100% - 28px);padding:max(28px,calc(50vh - 72px)) 0 60px}body.search-active .page{padding-top:56px}.masthead h1{font-size:29px;letter-spacing:-1px}.search-section{max-width:none;margin-top:26px}.results{max-width:none}.status{max-width:none}.cat{display:none}}
+@media(max-width:440px){.page{padding-top:max(24px,calc(50vh - 64px))}body.search-active .page{padding-top:52px}.masthead h1{font-size:26px}.urlbar input{font-size:15px}.urlbar button{width:40px;height:40px}}
+@media(max-width:380px){.lang-switch button{padding:0 6px;font-size:10px}.masthead h1{font-size:23px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="top-controls">
+  <div class="lang-switch" role="group" aria-label="语言 / Language">
+    <button type="button" data-lang="zh-Hans" aria-pressed="true">简中</button>
+    <button type="button" data-lang="zh-Hant" aria-pressed="false">繁中</button>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+  <button id="themeToggle" class="theme-toggle" type="button" aria-label="切换深色模式" title="切换深色模式">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.4 14.2A8.5 8.5 0 0 1 9.8 3.6 8.5 8.5 0 1 0 20.4 14.2Z"></path></svg>
+  </button>
+</div>
+
+<main class="page">
+  <header class="masthead">
+    <h1><span class="title-xiaomi" id="storeTitle">小米应用商店</span>
+      <span class="title-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"></path></svg></span>
+      <span class="title-obtainium">Obtainium</span>
+    </h1>
+  </header>
+
+  <section class="search-section">
+    <form class="urlbar" id="searchForm" role="search" autocomplete="off">
+      <span class="urlbar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.2-3.2"></path></svg></span>
+      <input id="q" type="search" inputmode="search" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="粘贴 app.mi.com 链接、包名，或输入应用名称" aria-label="搜索小米应用商店">
+      <button type="submit" aria-label="搜索"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"></path></svg></button>
+    </form>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+  </section>
+
+  <div id="results" class="results"></div>
+</main>
+<script>
+(function () {
+  var WORKER = __WORKER__;
+  WORKER = String(WORKER || '').replace(/\/+$/, '');
+  var TOTAL = __TOTAL__;
+  var LANG_KEY = 'mi-lang';
+  var THEME_KEY = 'mi-theme';
+  var LANGS = ['zh-Hans', 'zh-Hant', 'en'];
+  var STR = {
+    'zh-Hans': {
+      pageTitle: 'Mi2Obtainium', storeName: '小米应用商店',
+      meta: '粘贴小米应用商店链接、包名或应用名称，生成 Obtainium 可直接读取的更新源。',
+      placeholder: '粘贴 app.mi.com 链接、包名，或输入应用名称', searchAria: '搜索小米应用商店', search: '搜索',
+      languageGroup: '语言', themeToDark: '切换深色模式', themeToLight: '切换浅色模式',
+      loadingIndex: '正在加载 {count} 个应用的搜索索引…', indexFailed: '搜索索引加载失败',
+      empty: '没有找到匹配的应用', retry: '换个名称或包名试试', direct: '直接解析',
+      found: '找到 {count} 个结果', foundLimit: '找到 {count} 个结果，显示前 20 个',
+      noWorker: ' · 还没有配置 WORKER_URL', noWorkerHint: '还没有配置 WORKER_URL · 先在 Pages 变量里设置 Worker 地址'
+    },
+    'zh-Hant': {
+      pageTitle: 'Mi2Obtainium', storeName: '小米應用商店',
+      meta: '貼上小米應用商店連結、套件名稱或應用程式名稱，產生 Obtainium 可直接讀取的更新來源。',
+      placeholder: '貼上 app.mi.com 連結、套件名稱，或輸入應用程式名稱', searchAria: '搜尋小米應用商店', search: '搜尋',
+      languageGroup: '語言', themeToDark: '切換深色模式', themeToLight: '切換淺色模式',
+      loadingIndex: '正在載入 {count} 個應用程式的搜尋索引…', indexFailed: '搜尋索引載入失敗',
+      empty: '找不到符合的應用程式', retry: '換個名稱或套件名稱試試', direct: '直接解析',
+      found: '找到 {count} 個結果', foundLimit: '找到 {count} 個結果，顯示前 20 個',
+      noWorker: ' · 尚未設定 WORKER_URL', noWorkerHint: '尚未設定 WORKER_URL · 先在 Pages 變數中設定 Worker 位址'
+    },
+    en: {
+      pageTitle: 'Mi2Obtainium', storeName: 'Xiaomi App Store',
+      meta: 'Paste a Xiaomi App Store link, package name, or app name to generate an update source Obtainium can read.',
+      placeholder: 'Paste an app.mi.com link, package name, or app name', searchAria: 'Search Xiaomi App Store', search: 'Search',
+      languageGroup: 'Language', themeToDark: 'Switch to dark mode', themeToLight: 'Switch to light mode',
+      loadingIndex: 'Loading the search index for {count} apps…', indexFailed: 'Failed to load the search index',
+      empty: 'No matching app found', retry: 'Try another name or package name', direct: 'Direct resolve',
+      found: '{count} results found', foundLimit: '{count} results found, showing the first 20',
+      noWorker: ' · WORKER_URL is not configured', noWorkerHint: 'WORKER_URL is not configured · set the Worker URL in Pages variables first'
+    }
+  };
+  var lang = document.documentElement.lang === 'zh-Hant' ? 'zh-Hant' : document.documentElement.lang === 'en' ? 'en' : 'zh-Hans';
+  var input = document.getElementById('q');
+  var form = document.getElementById('searchForm');
+  var results = document.getElementById('results');
+  var status = document.getElementById('status');
+  var apps = null;
+  var loading = null;
+  var timer = null;
+
+  function t(key, vars) {
+    var table = STR[lang] || STR['zh-Hans'];
+    var text = table[key] || STR['zh-Hans'][key] || key;
+    return String(text).replace(/\{(\w+)\}/g, function (_, name) { return String((vars || {})[name] || ''); });
+  }
+
+  function applyTheme(next, persist) {
+    var theme = next === 'dark' ? 'dark' : 'light';
+    document.documentElement.dataset.theme = theme;
+    if (persist) { try { localStorage.setItem(THEME_KEY, theme); } catch (e) {} }
+    var meta = document.getElementById('themeColor');
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#0f0f10' : '#ffffff');
+    var favicon = document.getElementById('favicon');
+    if (favicon) favicon.href = theme === 'dark' ? 'favicon.svg?v=5' : 'favicon-light.svg?v=3';
+    var button = document.getElementById('themeToggle');
+    if (button) {
+      var label = theme === 'dark' ? t('themeToLight') : t('themeToDark');
+      button.setAttribute('aria-label', label);
+      button.setAttribute('title', label);
+    }
+  }
+
+  function applyLanguage(next, persist) {
+    lang = LANGS.indexOf(next) >= 0 ? next : 'zh-Hans';
+    if (persist) { try { localStorage.setItem(LANG_KEY, lang); } catch (e) {} }
+    document.documentElement.lang = lang === 'zh-Hant' ? 'zh-Hant' : lang === 'en' ? 'en' : 'zh-CN';
+    document.title = t('pageTitle');
+    var meta = document.getElementById('metaDescription');
+    if (meta) meta.setAttribute('content', t('meta'));
+    var store = document.getElementById('storeTitle');
+    if (store) store.textContent = t('storeName');
+    input.placeholder = t('placeholder');
+    input.setAttribute('aria-label', t('searchAria'));
+    var submit = form.querySelector('button[type="submit"]');
+    if (submit) submit.setAttribute('aria-label', t('search'));
+    var group = document.querySelector('.lang-switch');
+    if (group) group.setAttribute('aria-label', t('languageGroup'));
+    document.querySelectorAll('[data-lang]').forEach(function (button) {
+      button.setAttribute('aria-pressed', String(button.getAttribute('data-lang') === lang));
+    });
+    applyTheme(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light', false);
+    if (input.value.trim() && results.classList.contains('show')) run();
+  }
+
+  function setActive(value) { document.body.classList.toggle('search-active', value); }
+
+  function esc(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function (ch) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+    });
+  }
+
+  function pkgFrom(value) {
+    var id = value.match(/[?&]id=([A-Za-z0-9._]+)/);
+    if (id) return id[1];
+    var pkg = value.match(/([A-Za-z][A-Za-z0-9_]*(?:[.][A-Za-z0-9_]+)+)/);
+    return pkg ? pkg[1] : '';
+  }
+
+  function load() {
+    if (apps) return Promise.resolve(apps);
+    if (loading) return loading;
+    status.textContent = t('loadingIndex', { count: Number(TOTAL).toLocaleString(lang === 'en' ? 'en-US' : 'zh-CN') });
+    loading = fetch('search-index.json', { cache: 'force-cache' })
+      .then(function (response) {
+        if (!response.ok) throw new Error(t('indexFailed'));
+        return response.json();
+      })
+      .then(function (data) {
+        apps = Array.isArray(data) ? data : (data.apps || []);
+        return apps;
+      })
+      .catch(function (error) {
+        status.textContent = error.message;
+        apps = [];
+        return apps;
+      });
+    return loading;
+  }
+
+  function rank(app, q) {
+    var name = String(app.n || '').toLowerCase();
+    var pkg = String(app.p || '').toLowerCase();
+    var category = String(app.c || '').toLowerCase();
+    if (name === q) return 0;
+    if (name.indexOf(q) === 0) return 1;
+    if (pkg === q) return 2;
+    if (pkg.indexOf(q) === 0) return 3;
+    if (name.indexOf(q) >= 0) return 4;
+    if (pkg.indexOf(q) >= 0) return 5;
+    if (category.indexOf(q) >= 0) return 6;
+    return -1;
+  }
+
+  function item(app, direct) {
+    var pkg = app.p;
+    var href = WORKER ? WORKER + '/o/' + encodeURIComponent(pkg) : '#';
+    var icon = String(app.i || '');
+    if (icon.indexOf('http://') === 0) icon = 'https://' + icon.slice(7);
+    var letter = String(app.n || pkg || '?').slice(0, 1);
+    var name = direct ? pkg : (app.n || pkg);
+    var category = direct ? t('direct') : (app.c || '');
+    return '<a class="item' + (WORKER ? '' : ' disabled') + '" href="' + esc(href) + '"' + (WORKER ? '' : ' data-disabled="1"') + '>' +
+      '<span class="icon">' + esc(letter) + (icon ? '<img loading="lazy" src="' + esc(icon) + '" alt="" onerror="this.remove()">' : '') + '</span>' +
+      '<span class="body"><strong>' + esc(name) + '</strong><small>' + esc(pkg) + '</small></span>' +
+      '<span class="cat">' + esc(category) + '</span></a>';
+  }
+
+  async function run() {
+    var query = input.value.trim();
+    if (!query) {
+      results.className = 'results';
+      results.innerHTML = '';
+      status.textContent = '';
+      setActive(false);
+      return;
+    }
+    setActive(true);
+    var list = await load();
+    var lower = query.toLowerCase();
+    var pkg = pkgFrom(query);
+    var found = [];
+    var seen = Object.create(null);
+    if (pkg) {
+      found.push({ direct: pkg });
+      seen[pkg] = 1;
+    }
+    for (var i = 0; i < list.length; i += 1) {
+      var app = list[i];
+      if (!app || !app.p || seen[app.p]) continue;
+      var score = rank(app, lower);
+      if (score < 0) continue;
+      seen[app.p] = 1;
+      found.push({ app: app, score: score });
+    }
+    found.sort(function (a, b) {
+      if (a.direct && !b.direct) return -1;
+      if (!a.direct && b.direct) return 1;
+      return a.score - b.score;
+    });
+    var limited = found.slice(0, 20);
+    if (!limited.length) {
+      results.className = 'results show';
+      results.innerHTML = '<p class="empty">' + esc(t('empty')) + '</p>';
+      status.textContent = t('retry');
+      return;
+    }
+    results.className = 'results show';
+    results.innerHTML = limited.map(function (entry) {
+      return entry.direct ? item({ p: entry.direct }, true) : item(entry.app, false);
+    }).join('');
+    status.textContent = found.length > 20 ? t('foundLimit', { count: found.length }) : t('found', { count: found.length });
+    if (!WORKER) status.textContent += t('noWorker');
+  }
+
+  function schedule() {
+    clearTimeout(timer);
+    timer = setTimeout(run, 160);
+  }
+
+  input.addEventListener('focus', function () { setActive(true); });
+  input.addEventListener('input', function () { setActive(true); schedule(); });
+  input.addEventListener('blur', function () {
+    setTimeout(function () {
+      if (!input.value.trim() && !results.classList.contains('show')) setActive(false);
+    }, 160);
+  });
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    setActive(true);
+    run();
+  });
+  results.addEventListener('click', function (event) {
+    if (event.target.closest('.item.disabled')) {
+      event.preventDefault();
+      status.textContent = t('noWorkerHint');
+    }
+  });
+  document.querySelectorAll('[data-lang]').forEach(function (button) {
+    button.addEventListener('click', function () { applyLanguage(button.getAttribute('data-lang'), true); });
+  });
+  var themeToggle = document.getElementById('themeToggle');
+  if (themeToggle) themeToggle.addEventListener('click', function () {
+    applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark', true);
+  });
+  try {
+    var media = matchMedia('(prefers-color-scheme: dark)');
+    if (media.addEventListener) media.addEventListener('change', function (event) {
+      try { if (localStorage.getItem(THEME_KEY)) return; } catch (e) {}
+      applyTheme(event.matches ? 'dark' : 'light', false);
+    });
+  } catch (e) {}
+  try {
+    window.addEventListener('languagechange', function () {
+      try { if (localStorage.getItem(LANG_KEY)) return; } catch (e) {}
+      var next = navigator.languages && navigator.languages.length ? navigator.languages[0] : navigator.language;
+      next = String(next || '').toLowerCase();
+      applyLanguage(!next.indexOf('zh') ? (/hant|tw|hk|mo/.test(next) ? 'zh-Hant' : 'zh-Hans') : 'en', false);
+    });
+  } catch (e) {}
+
+  applyTheme(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light', false);
+  applyLanguage(lang, false);
+})();
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+

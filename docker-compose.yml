@@ -1,0 +1,13 @@
+services:
+  mi2obtainium:
+    build: .
+    container_name: mi2obtainium
+    restart: unless-stopped
+    ports:
+      - "8787:8787"
+    environment:
+      PORT: "8787"
+      # 改成这台设备的局域网 IP 或公网域名；留空则自动取容器网卡地址
+      PUBLIC_HOST: ""
+    volumes:
+      - ./data:/app/data

@@ -1,0 +1,70 @@
+name: Build Obtainium Pages
+
+on:
+  schedule:
+    # GitHub 的 cron 可能有延迟；每 6 小时跑一次
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'packages.json'
+      - 'scripts/export-pages.mjs'
+      - 'lib/**'
+      - 'public/**'
+      - 'data/categories.json'
+      - 'package.json'
+      - '.github/workflows/pages.yml'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install --omit=dev --no-audit --no-fund
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Export static pages
+        env:
+          # 可选：自定义域名或特殊 Pages 地址时，在仓库 Variables 里设置 BASE_URL
+          BASE_URL: ${{ vars.BASE_URL }}
+          # Worker 部署后，在仓库 Variables 里设置 WORKER_URL
+          WORKER_URL: ${{ vars.WORKER_URL }}
+        run: node scripts/export-pages.mjs
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
