@@ -22,6 +22,10 @@ await fs.copyFile(
   path.join(ROOT, 'public', 'favicon-light.svg'),
   path.join(OUT, 'favicon-light.svg'),
 );
+await fs.copyFile(
+  path.join(ROOT, 'public', 'styles.css'),
+  path.join(OUT, 'styles.css'),
+);
 
 // Reuse the category-name -> id map when present, so a Pages build does not
 // have to probe ~30 tiny endpoints every time.
