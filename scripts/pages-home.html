@@ -70,7 +70,7 @@ body.search-active .page{padding-top:8vh}
 :root[data-theme="dark"] .urlbar:focus-within{border-color:var(--muted2);box-shadow:0 2px 6px rgba(0,0,0,.24),0 16px 42px rgba(0,0,0,.36)}
 :root[data-theme="dark"] .results{box-shadow:0 18px 45px -24px rgba(0,0,0,.9)}
 @media(max-width:720px){.top-controls{top:12px;right:14px;gap:6px}.lang-switch{height:25px}.lang-switch button{padding:0 7px;font-size:10.5px}.theme-toggle{width:25px;height:25px}.page{width:calc(100% - 28px);padding:max(28px,calc(50vh - 72px)) 0 60px}body.search-active .page{padding-top:56px}.masthead h1{font-size:29px;letter-spacing:-1px}.search-section{max-width:none;margin-top:26px}.results{max-width:none}.status{max-width:none}.cat{display:none}}
-@media(max-width:440px){.page{padding-top:max(24px,calc(50vh - 64px))}body.search-active .page{padding-top:52px}.masthead h1{font-size:26px}.urlbar input{font-size:14px}.urlbar button{width:40px;height:40px}}
+@media(max-width:440px){.page{padding-top:max(24px,calc(50vh - 64px))}body.search-active .page{padding-top:52px}.masthead h1{font-size:26px}.urlbar input{font-size:12px}.urlbar button{width:40px;height:40px}}
 @media(max-width:380px){.lang-switch button{padding:0 6px;font-size:10px}.masthead h1{font-size:23px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
@@ -119,8 +119,7 @@ body.search-active .page{padding-top:8vh}
     'zh-Hans': {
       pageTitle: 'Mi2Obtainium', storeName: '小米应用商店',
       meta: '粘贴小米应用商店链接、包名或应用名称，生成 Obtainium 可直接读取的更新源。',
-      placeholder: '粘贴 app.mi.com 链接、包名，或输入应用名称',
-      placeholderMobile: '粘贴链接、包名或应用名称', searchAria: '搜索小米应用商店', search: '搜索',
+      placeholder: '粘贴 app.mi.com 链接、包名，或输入应用名称', searchAria: '搜索小米应用商店', search: '搜索',
       languageGroup: '语言', themeToDark: '切换深色模式', themeToLight: '切换浅色模式',
       loadingIndex: '正在加载 {count} 个应用的搜索索引…', indexFailed: '搜索索引加载失败',
       empty: '没有找到匹配的应用', retry: '换个名称或包名试试', direct: '直接解析',
@@ -130,8 +129,7 @@ body.search-active .page{padding-top:8vh}
     'zh-Hant': {
       pageTitle: 'Mi2Obtainium', storeName: '小米應用商店',
       meta: '貼上小米應用商店連結、套件名稱或應用程式名稱，產生 Obtainium 可直接讀取的更新來源。',
-      placeholder: '貼上 app.mi.com 連結、套件名稱，或輸入應用程式名稱',
-      placeholderMobile: '貼上連結、套件名稱或應用名稱', searchAria: '搜尋小米應用商店', search: '搜尋',
+      placeholder: '貼上 app.mi.com 連結、套件名稱，或輸入應用程式名稱', searchAria: '搜尋小米應用商店', search: '搜尋',
       languageGroup: '語言', themeToDark: '切換深色模式', themeToLight: '切換淺色模式',
       loadingIndex: '正在載入 {count} 個應用程式的搜尋索引…', indexFailed: '搜尋索引載入失敗',
       empty: '找不到符合的應用程式', retry: '換個名稱或套件名稱試試', direct: '直接解析',
@@ -141,8 +139,7 @@ body.search-active .page{padding-top:8vh}
     en: {
       pageTitle: 'Mi2Obtainium', storeName: 'Xiaomi App Store',
       meta: 'Paste a Xiaomi App Store link, package name, or app name to generate an update source Obtainium can read.',
-      placeholder: 'Paste an app.mi.com link, package name, or app name',
-      placeholderMobile: 'Paste a link, package, or app name', searchAria: 'Search Xiaomi App Store', search: 'Search',
+      placeholder: 'Paste an app.mi.com link, package name, or app name', searchAria: 'Search Xiaomi App Store', search: 'Search',
       languageGroup: 'Language', themeToDark: 'Switch to dark mode', themeToLight: 'Switch to light mode',
       loadingIndex: 'Loading the search index for {count} apps…', indexFailed: 'Failed to load the search index',
       empty: 'No matching app found', retry: 'Try another name or package name', direct: 'Direct resolve',
@@ -190,7 +187,7 @@ body.search-active .page{padding-top:8vh}
     if (meta) meta.setAttribute('content', t('meta'));
     var store = document.getElementById('storeTitle');
     if (store) store.textContent = t('storeName');
-    syncPlaceholder();
+    input.placeholder = t('placeholder');
     input.setAttribute('aria-label', t('searchAria'));
     var submit = form.querySelector('button[type="submit"]');
     if (submit) submit.setAttribute('aria-label', t('search'));
@@ -202,17 +199,6 @@ body.search-active .page{padding-top:8vh}
     applyTheme(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light', false);
     if (input.value.trim() && results.classList.contains('show')) run();
   }
-
-  function syncPlaceholder() {
-    var mobile = window.matchMedia('(max-width: 440px)').matches;
-    input.placeholder = t(mobile ? 'placeholderMobile' : 'placeholder');
-  }
-
-  try {
-    var mobileQuery = window.matchMedia('(max-width: 440px)');
-    if (mobileQuery.addEventListener) mobileQuery.addEventListener('change', syncPlaceholder);
-    else mobileQuery.addListener(syncPlaceholder);
-  } catch (e) {}
 
   function setActive(value) { document.body.classList.toggle('search-active', value); }
 
