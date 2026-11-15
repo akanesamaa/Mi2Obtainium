@@ -73,6 +73,7 @@ body.search-active .page{padding-top:8vh}
 @media(max-width:440px){.page{padding-top:max(24px,calc(50vh - 64px))}body.search-active .page{padding-top:52px}.masthead h1{font-size:26px}.urlbar input{font-size:12px}.urlbar button{width:40px;height:40px}}
 @media(max-width:380px){.lang-switch button{padding:0 6px;font-size:10px}.masthead h1{font-size:23px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+html.theme-switching *,html.theme-switching *::before,html.theme-switching *::after{transition:none!important}
 </style>
 </head>
 <body>
@@ -162,9 +163,15 @@ body.search-active .page{padding-top:8vh}
     return String(text).replace(/\{(\w+)\}/g, function (_, name) { return String((vars || {})[name] || ''); });
   }
 
+  var themeTimer = null;
+
   function applyTheme(next, persist) {
     var theme = next === 'dark' ? 'dark' : 'light';
-    document.documentElement.dataset.theme = theme;
+    var root = document.documentElement;
+    root.classList.add('theme-switching');
+    root.dataset.theme = theme;
+    clearTimeout(themeTimer);
+    themeTimer = setTimeout(function () { root.classList.remove('theme-switching'); }, 220);
     if (persist) { try { localStorage.setItem(THEME_KEY, theme); } catch (e) {} }
     var meta = document.getElementById('themeColor');
     if (meta) meta.setAttribute('content', theme === 'dark' ? '#0f0f10' : '#ffffff');

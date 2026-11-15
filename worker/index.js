@@ -354,7 +354,7 @@ async function renderPage(app, origin) {
   } catch (error) {}
 })();
 </script>
-<link rel="stylesheet" href="${PAGES_BASE}/styles.css?v=30">
+<link rel="stylesheet" href="${PAGES_BASE}/styles.css?v=31">
 </head>
 <body class="search-active" data-app-type="${escapeHtml(app.targetType)}">
 <div class="top-controls">
@@ -473,9 +473,15 @@ async function renderPage(app, origin) {
     return String(text).replace(/\\{(\\w+)\\}/g, function (_, name) { return String((vars || {})[name] || ''); });
   }
 
+  var themeTimer = null;
+
   function applyTheme(next, persist) {
     var theme = next === 'dark' ? 'dark' : 'light';
-    document.documentElement.dataset.theme = theme;
+    var root = document.documentElement;
+    root.classList.add('theme-switching');
+    root.dataset.theme = theme;
+    clearTimeout(themeTimer);
+    themeTimer = setTimeout(function () { root.classList.remove('theme-switching'); }, 220);
     if (persist) { try { localStorage.setItem(THEME_KEY, theme); } catch (e) {} }
     var meta = document.getElementById('themeColor');
     if (meta) meta.setAttribute('content', theme === 'dark' ? '#0f0f10' : '#ffffff');

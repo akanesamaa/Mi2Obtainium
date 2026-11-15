@@ -154,6 +154,12 @@ code {
 
 [hidden] { display: none !important; }
 
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition: none !important;
+}
+
 .page {
   width: min(760px, calc(100% - 36px));
   margin: 0 auto;
