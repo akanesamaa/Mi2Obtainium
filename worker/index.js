@@ -324,7 +324,7 @@ function renderPage(app, origin) {
     if (theme !== 'light' && theme !== 'dark') theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     document.documentElement.dataset.theme = theme;
     var favicon = document.getElementById('favicon');
-    if (favicon) favicon.href = theme === 'dark' ? '${PAGES_BASE}/favicon.svg?v=5' : '${PAGES_BASE}/favicon-light.svg?v=3';
+    if (favicon) favicon.href = theme === 'dark' ? '${PAGES_BASE}/favicon.svg?v=18' : '${PAGES_BASE}/favicon-light.svg?v=3';
     var lang = localStorage.getItem('mi-lang');
     if (lang !== 'zh-Hans' && lang !== 'zh-Hant' && lang !== 'en') {
       lang = 'zh-Hans';
@@ -340,59 +340,9 @@ function renderPage(app, origin) {
   } catch (error) {}
 })();
 </script>
-<style>
-@import url('${PAGES_BASE}/fonts/manrope/Manrope.css');
-@import url('${PAGES_BASE}/fonts/noto-sans-sc/NotoSansSC.css');
-@font-face{font-family:'Google Sans';font-style:normal;font-weight:400 700;font-display:swap;src:url('${PAGES_BASE}/fonts/GoogleSans-var.woff2') format('woff2')}
-:root{color-scheme:light;--bg:#fff;--text:#0a0a0a;--muted:#777;--muted2:#9a9a9a;--line:#e6e6e6;--soft:#f5f5f5;--soft2:#fafafa;--xiaomi:#ff6900;--obtainium:#7c4dff;--font:"Manrope","Noto Sans SC","Google Sans","Microsoft YaHei","PingFang SC",system-ui,sans-serif}
-:root[data-theme="dark"]{color-scheme:dark;--bg:#0f0f10;--text:#f3f3f1;--muted:#a5a5a0;--muted2:#777773;--line:#2b2b2e;--soft:#1a1a1c;--soft2:#141416}
-*{box-sizing:border-box}body{margin:0;padding:34px 18px 60px;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.6;transition:background-color .18s ease,color .18s ease}
-a{color:inherit;text-decoration:none}.wrap{width:min(720px,100%);margin:0 auto}
-.top-controls{position:absolute;top:17px;right:20px;z-index:40;display:flex;align-items:center;gap:8px}.lang-switch{display:flex;align-items:center;height:27px;padding:2px;border:1px solid var(--line);border-radius:6px;background:var(--soft)}.lang-switch button{height:100%;border:0;border-radius:4px;display:flex;align-items:center;justify-content:center;background:transparent;color:var(--muted);padding:0 8px;font-size:11px;line-height:1;font-family:var(--font);cursor:pointer}.lang-switch button:hover{color:var(--text)}.lang-switch button[aria-pressed="true"]{background:var(--bg);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.1)}.theme-toggle{width:27px;height:27px;padding:0;border:1px solid var(--line);border-radius:4px;display:grid;place-items:center;background:var(--bg);color:var(--text);cursor:pointer}.theme-toggle:hover{background:var(--soft);border-color:var(--muted2)}.theme-toggle svg{width:15px;height:15px;display:block}.theme-toggle .icon-moon{display:none}:root[data-theme="dark"] .theme-toggle .icon-sun{display:none}:root[data-theme="dark"] .theme-toggle .icon-moon{display:block}
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:34px;color:var(--muted);font-size:12px}
-.top a{color:var(--muted)}.top a:hover{color:var(--text)}.top span{color:var(--muted2)}
-.brand{display:flex;align-items:center;gap:9px;font-weight:700;color:var(--text);font-size:14px;letter-spacing:-.2px}
-.brand-xiaomi{color:var(--xiaomi)}.brand-obtainium{color:var(--obtainium)}.brand-sep{color:var(--muted2);font-weight:400}
-.mark{width:28px;height:28px;border-radius:9px;background:#111;color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700}
-.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:24px;box-shadow:0 20px 55px -34px rgba(0,0,0,.35)}
-.head{display:flex;align-items:flex-start;gap:15px}
-.icon{position:relative;width:64px;height:64px;flex:0 0 auto;border-radius:10px;overflow:hidden;background:#f5f5f5;border:1px solid var(--line);display:grid;place-items:center;font-size:23px;font-weight:700;color:#555}
-.icon img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.title{min-width:0;flex:1}.title h1{margin:0;font-size:23px;line-height:1.25;letter-spacing:-.6px;overflow-wrap:anywhere}
-.badge{display:inline-block;margin-left:5px;padding:2px 9px;border-radius:999px;background:#111;color:#fff;font-family:"Cascadia Code",Consolas,monospace;font-size:11px;font-weight:700;vertical-align:2px}
-.pkg{margin:3px 0 0;font-family:"Cascadia Code",Consolas,monospace;font-size:11.5px;color:var(--muted);word-break:break-all}
-.byline{margin:4px 0 0;font-size:12px;color:var(--muted2)}
-.actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px}
-.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid transparent;border-radius:4px;padding:9px 14px;font-size:12.5px;font-weight:700;line-height:1.2;cursor:pointer;white-space:nowrap;font-family:var(--font)}
-.btn.primary{background:#111;color:#fff;box-shadow:0 10px 20px -12px rgba(0,0,0,.4)}.btn.obtainium{background:var(--obtainium);color:#fff;box-shadow:0 10px 24px -14px rgba(124,77,255,.7)}.btn.obtainium:hover{background:#6a3fe8}
-.btn.ghost{background:#fafafa;border-color:var(--line);color:#555}
-.meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:18px}
-.meta div{padding:10px 11px;border-radius:6px;background:#fafafa;border:1px solid #f0f0f0;min-width:0}
-.meta span{display:block;color:var(--muted2);font-size:10.5px}.meta strong{display:block;margin-top:2px;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.source{margin-top:18px;padding-top:15px;border-top:1px solid var(--line);display:flex;align-items:center;gap:7px;min-width:0}
-.source span{flex:0 0 auto;color:var(--muted2);font-size:10.5px}.source code{flex:1;min-width:0;font-family:"Cascadia Code",Consolas,monospace;font-size:10.5px;color:var(--muted);overflow-x:auto;overflow-y:hidden;text-overflow:clip;white-space:nowrap;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
-.apk-line{display:flex;align-items:center;gap:7px;margin-top:9px;min-width:0}.apk-line span{flex:0 0 auto;color:var(--muted2);font-size:10.5px}
-.apk-line .apk{flex:1;min-width:0;font-family:"Cascadia Code",Consolas,monospace;font-size:10.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:underline;text-underline-offset:2px}
-.hint{margin:16px 0 0;color:var(--muted2);font-size:11px;line-height:1.7}
-.foot{margin-top:22px;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--muted2);font-size:10.5px;line-height:1.7}
-.foot-link{border:0;background:transparent;color:inherit;padding:0;font:inherit;line-height:inherit;text-decoration:none;cursor:pointer}
-.foot-link:hover{color:var(--text)}
-@media(max-width:560px){body{padding:48px 13px 50px}.card{padding:18px;border-radius:10px}.head{gap:11px}.icon{width:56px;height:56px;border-radius:9px}.title h1{font-size:20px}.meta{grid-template-columns:repeat(2,minmax(0,1fr))}.top{margin-bottom:24px}.actions .btn.primary{flex:1}}
-@media(max-width:720px){.top-controls{top:12px;right:14px;gap:6px}.lang-switch{height:25px}.lang-switch button{padding:0 7px;font-size:10.5px}.theme-toggle{width:25px;height:25px}}
-@media(max-width:380px){.lang-switch button{padding:0 6px;font-size:10px}}
-:root[data-theme="dark"] .card{background:#141416;border-color:var(--line);box-shadow:0 20px 55px -34px rgba(0,0,0,.9)}
-:root[data-theme="dark"] .mark{background:var(--text);color:var(--bg)}
-:root[data-theme="dark"] .icon{background:var(--soft);border-color:var(--line)}
-:root[data-theme="dark"] .badge{background:var(--text);color:var(--bg)}
-:root[data-theme="dark"] .btn.primary{background:var(--text);color:var(--bg);box-shadow:0 10px 20px -12px rgba(0,0,0,.8)}
-:root[data-theme="dark"] .btn.ghost{background:var(--soft2);border-color:var(--line);color:var(--muted)}
-:root[data-theme="dark"] .meta div{background:var(--soft2);border-color:var(--line)}
-:root[data-theme="dark"] .source{border-top-color:var(--line)}
-:root[data-theme="dark"] .top-controls{color:var(--text)}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
-</style>
+<link rel="stylesheet" href="${PAGES_BASE}/styles.css?v=29">
 </head>
-<body data-app-type="${escapeHtml(app.targetType)}">
+<body class="search-active" data-app-type="${escapeHtml(app.targetType)}">
 <div class="top-controls">
   <div class="lang-switch" role="group" aria-label="语言 / Language">
     <button type="button" data-lang="zh-Hans" aria-pressed="true">简中</button>
@@ -404,41 +354,57 @@ a{color:inherit;text-decoration:none}.wrap{width:min(720px,100%);margin:0 auto}
     <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.4 14.2A8.5 8.5 0 0 1 9.8 3.6 8.5 8.5 0 1 0 20.4 14.2Z"></path></svg>
   </button>
 </div>
-<main class="wrap">
-  <header class="top">
-    <a class="brand" href="${PAGES_BASE}/"><span class="mark">米</span> <span class="brand-xiaomi" id="storeTitle">小米应用商店</span> <span class="brand-sep">›</span> <span class="brand-obtainium">Obtainium</span></a>
-    <span id="serviceLabel">Cloudflare Worker</span>
+
+<main class="page">
+  <header class="masthead">
+    <h1><a href="${PAGES_BASE}/"><span class="title-xiaomi" id="storeTitle">小米应用商店</span><span class="title-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"></path></svg></span><span class="title-obtainium">Obtainium</span></a></h1>
   </header>
 
-  <article class="card">
-    <div class="head">
-      <span class="icon">${escapeHtml(letter)}${icon ? `<img src="${escapeHtml(icon)}" alt="" onerror="this.remove()">` : ''}</span>
-      <div class="title">
-        <h1>${escapeHtml(app.name)} <span class="badge">v${escapeHtml(app.version)}</span></h1>
+  <section class="result">
+    <div class="result-head">
+      <span class="app-icon-wrap">
+        <span class="app-letter">${escapeHtml(letter)}</span>
+        ${icon ? `<img class="app-icon" src="${escapeHtml(icon)}" alt="" onerror="this.remove()">` : ''}
+      </span>
+      <div class="result-title">
+        <div class="title-line">
+          <h2>${escapeHtml(app.name)}</h2>
+          <span class="version-badge">v${escapeHtml(app.version)}</span>
+        </div>
         <p class="pkg">${escapeHtml(app.pkg)}</p>
         <p class="byline">${escapeHtml(app.author)}${app.category ? ` · ${escapeHtml(app.category)}` : ''}</p>
       </div>
+      <div class="result-actions">
+        <a class="btn obtainium" id="addBtn" href="${escapeHtml(deepLink)}" data-i18n="addObtainium">在 Obtainium 中添加</a>
+        <button class="btn ghost" id="copyDeep" type="button" data-deep="${escapeHtml(deepLink)}" data-i18n="copyDeep">复制深链</button>
+        <a class="btn ghost" id="downloadApk" href="${escapeHtml(app.targetUrl)}" target="_blank" rel="noreferrer" data-i18n="downloadApk">下载 APK</a>
+      </div>
     </div>
 
-    <div class="meta">
-      <div><span data-i18n="version">版本</span><strong>${escapeHtml(app.version)}</strong></div>
-      <div><span data-i18n="size">大小</span><strong id="sizeValue" data-empty="${app.sizeText ? '0' : '1'}">${escapeHtml(app.sizeText || '未知')}</strong></div>
-      <div><span data-i18n="updated">更新日期</span><strong id="updatedValue" data-empty="${app.updated ? '0' : '1'}">${escapeHtml(app.updated || '未知')}</strong></div>
-      <div><span data-i18n="sourceType">直链来源</span><strong id="sourceValue" data-type="${escapeHtml(app.targetType)}">${typeLabel}</strong></div>
+    <div class="meta-grid">
+      <div class="meta-item"><span data-i18n="version">版本</span><strong>${escapeHtml(app.version)}</strong></div>
+      <div class="meta-item"><span data-i18n="size">大小</span><strong id="sizeValue" data-empty="${app.sizeText ? '0' : '1'}">${escapeHtml(app.sizeText || '未知')}</strong></div>
+      <div class="meta-item"><span data-i18n="updated">更新日期</span><strong id="updatedValue" data-empty="${app.updated ? '0' : '1'}">${escapeHtml(app.updated || '未知')}</strong></div>
+      <div class="meta-item"><span data-i18n="sourceType">直链来源</span><strong id="sourceValue" data-type="${escapeHtml(app.targetType)}">${typeLabel}</strong></div>
     </div>
 
-    <div class="actions">
-      <a class="btn obtainium" id="addBtn" href="${escapeHtml(deepLink)}" data-i18n="addObtainium">在 Obtainium 中添加</a>
-      <button class="btn ghost" id="copyDeep" type="button" data-deep="${escapeHtml(deepLink)}" data-i18n="copyDeep">复制深链</button>
-      <a class="btn ghost" id="downloadApk" href="${escapeHtml(app.targetUrl)}" target="_blank" rel="noreferrer" data-i18n="downloadApk">下载 APK</a>
+    <div class="result-body no-qr">
+      <div class="result-main">
+        <div class="source-box">
+          <span class="label" data-i18n="htmlSource">HTML 源</span>
+          <code title="${escapeHtml(pageUrl)}" tabindex="0">${escapeHtml(pageUrl)}</code>
+          <button class="icon-btn" id="copySource" type="button" data-copy="${escapeHtml(pageUrl)}">复制</button>
+        </div>
+        <div class="source-box">
+          <span class="label">APK</span>
+          <code><a href="${escapeHtml(app.targetUrl)}">${escapeHtml(filename)}</a></code>
+        </div>
+        <p class="byline" id="hint">APK 由手机直连小米 CDN 下载；Obtainium 每次检查都会重新解析这个 Worker 页面。</p>
+      </div>
     </div>
+  </section>
 
-    <div class="source"><span data-i18n="htmlSource">HTML 源</span><code title="${escapeHtml(pageUrl)}" tabindex="0">${escapeHtml(pageUrl)}</code></div>
-    <div class="apk-line"><span class="source-label">APK</span><a class="apk" href="${escapeHtml(app.targetUrl)}">${escapeHtml(filename)}</a></div>
-    <p class="hint" id="hint">APK 由手机直连小米 CDN 下载；Obtainium 每次检查都会重新解析这个 Worker 页面。</p>
-  </article>
-
-  <footer class="foot">
+  <footer class="site-foot">
     <a class="foot-link" href="${PAGES_BASE}/#about">关于</a>
     <span aria-hidden="true">·</span>
     <a class="foot-link" href="${PAGES_BASE}/#how">原理</a>
@@ -498,7 +464,7 @@ a{color:inherit;text-decoration:none}.wrap{width:min(720px,100%);margin:0 auto}
     var meta = document.getElementById('themeColor');
     if (meta) meta.setAttribute('content', theme === 'dark' ? '#0f0f10' : '#ffffff');
     var favicon = document.getElementById('favicon');
-    if (favicon) favicon.href = theme === 'dark' ? '${PAGES_BASE}/favicon.svg?v=5' : '${PAGES_BASE}/favicon-light.svg?v=3';
+    if (favicon) favicon.href = theme === 'dark' ? '${PAGES_BASE}/favicon.svg?v=18' : '${PAGES_BASE}/favicon-light.svg?v=3';
     var button = document.getElementById('themeToggle');
     if (button) {
       var label = theme === 'dark' ? t('themeToLight') : t('themeToDark');
@@ -555,21 +521,34 @@ a{color:inherit;text-decoration:none}.wrap{width:min(720px,100%);margin:0 auto}
     });
   } catch (e) {}
 
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch (e) {
+      var area = document.createElement('textarea');
+      area.value = text; area.style.position = 'fixed'; area.style.opacity = '0';
+      document.body.appendChild(area); area.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (error) {}
+      area.remove();
+      return ok;
+    }
+  }
+
   var button = document.getElementById('copyDeep');
   if (button) {
     button.addEventListener('click', async function () {
-      var text = button.getAttribute('data-deep') || '';
-      var ok = false;
-      try { await navigator.clipboard.writeText(text); ok = true; }
-      catch (e) {
-        var area = document.createElement('textarea');
-        area.value = text; area.style.position = 'fixed'; area.style.opacity = '0';
-        document.body.appendChild(area); area.select();
-        try { ok = document.execCommand('copy'); } catch (error) {}
-        area.remove();
-      }
+      var ok = await copyText(button.getAttribute('data-deep') || '');
       button.textContent = ok ? t('copied') : t('copyDeep');
       setTimeout(function () { button.textContent = t('copyDeep'); }, 1500);
+    });
+  }
+
+  var sourceButton = document.getElementById('copySource');
+  if (sourceButton) {
+    sourceButton.addEventListener('click', async function () {
+      var ok = await copyText(sourceButton.getAttribute('data-copy') || '');
+      sourceButton.textContent = ok ? t('copied') : '复制';
+      setTimeout(function () { sourceButton.textContent = '复制'; }, 1500);
     });
   }
 
