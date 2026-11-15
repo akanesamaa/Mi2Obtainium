@@ -321,8 +321,6 @@ async function renderPage(app, origin) {
   const filename = `${app.pkg}-${app.version}.apk`;
   const icon = String(app.icon || '').replace(/^http:\/\//i, 'https://');
   const letter = String(app.name || app.pkg || '?').slice(0, 1);
-  const typeLabel =
-    app.targetType === 'hash' ? '分类索引哈希' : '页面签名链接';
   return `<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -354,7 +352,7 @@ async function renderPage(app, origin) {
   } catch (error) {}
 })();
 </script>
-<link rel="stylesheet" href="${PAGES_BASE}/styles.css?v=31">
+<link rel="stylesheet" href="${PAGES_BASE}/styles.css?v=32">
 </head>
 <body class="search-active" data-app-type="${escapeHtml(app.targetType)}">
 <div class="top-controls">
@@ -399,7 +397,6 @@ async function renderPage(app, origin) {
       <div class="meta-item"><span data-i18n="version">版本</span><strong>${escapeHtml(app.version)}</strong></div>
       <div class="meta-item"><span data-i18n="size">大小</span><strong id="sizeValue" data-empty="${app.sizeText ? '0' : '1'}">${escapeHtml(app.sizeText || '未知')}</strong></div>
       <div class="meta-item"><span data-i18n="updated">更新日期</span><strong id="updatedValue" data-empty="${app.updated ? '0' : '1'}">${escapeHtml(app.updated || '未知')}</strong></div>
-      <div class="meta-item"><span data-i18n="sourceType">直链来源</span><strong id="sourceValue" data-type="${escapeHtml(app.targetType)}">${typeLabel}</strong></div>
     </div>
 
     <div class="result-body">
@@ -414,8 +411,8 @@ async function renderPage(app, origin) {
           <button class="icon-btn" id="copySource" type="button" data-copy="${escapeHtml(pageUrl)}">复制</button>
         </div>
         <div class="source-box">
-          <span class="label">APK</span>
-          <code><a href="${escapeHtml(app.targetUrl)}">${escapeHtml(filename)}</a></code>
+          <span class="label">文件名</span>
+          <code><a href="${escapeHtml(app.targetUrl)}" title="${escapeHtml(app.targetUrl)}">${escapeHtml(filename)}</a></code>
         </div>
       </div>
     </div>
@@ -504,8 +501,6 @@ async function renderPage(app, origin) {
     document.querySelectorAll('[data-i18n]').forEach(function (node) {
       node.textContent = t(node.getAttribute('data-i18n'));
     });
-    var source = document.getElementById('sourceValue');
-    if (source) source.textContent = t(source.getAttribute('data-type') === 'hash' ? 'hashSource' : 'signedSource');
     var size = document.getElementById('sizeValue');
     if (size && size.getAttribute('data-empty') === '1') size.textContent = t('unknown');
     var updated = document.getElementById('updatedValue');
