@@ -374,7 +374,9 @@ a{color:inherit;text-decoration:none}.wrap{width:min(720px,100%);margin:0 auto}
 .apk-line{display:flex;align-items:center;gap:7px;margin-top:9px;min-width:0}.apk-line span{flex:0 0 auto;color:var(--muted2);font-size:10.5px}
 .apk-line .apk{flex:1;min-width:0;font-family:"Cascadia Code",Consolas,monospace;font-size:10.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:underline;text-underline-offset:2px}
 .hint{margin:16px 0 0;color:var(--muted2);font-size:11px;line-height:1.7}
-.foot{margin-top:22px;text-align:center;color:var(--muted2);font-size:10.5px;line-height:1.7}
+.foot{margin-top:22px;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--muted2);font-size:10.5px;line-height:1.7}
+.foot-link{border:0;background:transparent;color:inherit;padding:0;font:inherit;line-height:inherit;text-decoration:none;cursor:pointer}
+.foot-link:hover{color:var(--text)}
 @media(max-width:560px){body{padding:48px 13px 50px}.card{padding:18px;border-radius:10px}.head{gap:11px}.icon{width:56px;height:56px;border-radius:9px}.title h1{font-size:20px}.meta{grid-template-columns:repeat(2,minmax(0,1fr))}.top{margin-bottom:24px}.actions .btn.primary{flex:1}}
 @media(max-width:720px){.top-controls{top:12px;right:14px;gap:6px}.lang-switch{height:25px}.lang-switch button{padding:0 7px;font-size:10.5px}.theme-toggle{width:25px;height:25px}}
 @media(max-width:380px){.lang-switch button{padding:0 6px;font-size:10px}}
@@ -436,7 +438,13 @@ a{color:inherit;text-decoration:none}.wrap{width:min(720px,100%);margin:0 auto}
     <p class="hint" id="hint">APK 由手机直连小米 CDN 下载；Obtainium 每次检查都会重新解析这个 Worker 页面。</p>
   </article>
 
-  <p class="foot" id="foot">由 Cloudflare Worker 实时解析 · ${escapeHtml(PAGES_BASE.replace(/^https?:\/\//, ''))}</p>
+  <footer class="foot">
+    <a class="foot-link" href="${PAGES_BASE}/#about">关于</a>
+    <span aria-hidden="true">·</span>
+    <a class="foot-link" href="${PAGES_BASE}/#how">原理</a>
+    <span aria-hidden="true">·</span>
+    <a class="foot-link" href="https://github.com/akanesamaa/Mi2Obtainium" target="_blank" rel="noreferrer">GitHub ↗</a>
+  </footer>
 </main>
 <script>
 (function () {
@@ -516,8 +524,6 @@ a{color:inherit;text-decoration:none}.wrap{width:min(720px,100%);margin:0 auto}
     if (updated && updated.getAttribute('data-empty') === '1') updated.textContent = t('unknown');
     var hint = document.getElementById('hint');
     if (hint) hint.textContent = t('hint');
-    var foot = document.getElementById('foot');
-    if (foot) foot.textContent = t('foot', { base: '${escapeHtml(PAGES_BASE.replace(/^https?:\/\//, ''))}' });
     var group = document.querySelector('.lang-switch');
     if (group) group.setAttribute('aria-label', t('languageGroup'));
     document.querySelectorAll('[data-lang]').forEach(function (button) {

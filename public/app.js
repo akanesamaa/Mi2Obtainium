@@ -828,7 +828,18 @@ document.getElementById('infoDialog')?.addEventListener('click', (event) => {
 });
 document.getElementById('infoDialog')?.addEventListener('close', () => {
   document.body.classList.remove('modal-open');
+  if (location.hash === '#about' || location.hash === '#how') {
+    history.replaceState(null, '', location.pathname + location.search);
+  }
 });
+
+function openInfoFromHash() {
+  const view = location.hash.replace('#', '');
+  if (view === 'about' || view === 'how') openInfo(view);
+}
+
+openInfoFromHash();
+window.addEventListener('hashchange', openInfoFromHash);
 
 /* ---------------- language + theme events ---------------- */
 
