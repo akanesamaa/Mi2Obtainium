@@ -204,6 +204,7 @@ html.theme-switching *,html.theme-switching *::before,html.theme-switching *::af
     var store = document.getElementById('storeTitle');
     if (store) store.textContent = t('storeName');
     input.placeholder = t('placeholder');
+    fitSearchText();
     input.setAttribute('aria-label', t('searchAria'));
     var submit = form.querySelector('button[type="submit"]');
     if (submit) submit.setAttribute('aria-label', t('search'));
@@ -215,6 +216,31 @@ html.theme-switching *,html.theme-switching *::before,html.theme-switching *::af
     applyTheme(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light', false);
     if (input.value.trim() && results.classList.contains('show')) run();
   }
+
+  var measureCtx = null;
+
+  function fitSearchText() {
+    if (!input) return;
+    if (window.innerWidth > 440) {
+      input.style.fontSize = '';
+      return;
+    }
+    if (!measureCtx) {
+      measureCtx = document.createElement('canvas').getContext('2d');
+    }
+    var available = input.clientWidth - 4;
+    if (available <= 0) return;
+    var family = getComputedStyle(input).fontFamily;
+    var size = 12;
+    measureCtx.font = '400 ' + size + 'px ' + family;
+    while (size > 9.5 && measureCtx.measureText(input.placeholder || '').width > available) {
+      size -= 0.5;
+      measureCtx.font = '400 ' + size + 'px ' + family;
+    }
+    input.style.fontSize = size + 'px';
+  }
+
+  window.addEventListener('resize', fitSearchText);
 
   function setActive(value) { document.body.classList.toggle('search-active', value); }
 
