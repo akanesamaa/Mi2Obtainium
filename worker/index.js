@@ -3,6 +3,8 @@ import QRCode from 'qrcode/lib/browser.js';
 const BASE = 'https://app.mi.com';
 const CDN_HOST = 'https://f5.market.xiaomi.com/download/';
 const PAGES_BASE = 'https://akanesamaa.github.io/Mi2Obtainium';
+const CACHE_ORIGIN = 'https://cache.mi2obtainium.internal';
+const CACHE_TTL = 900;
 const UA =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
 
@@ -86,6 +88,29 @@ function textOf(html) {
   ).trim();
 }
 
+function cacheRequest(path) {
+  return new Request(`${CACHE_ORIGIN}/${path}`, { method: 'GET' });
+}
+
+async function cachedRequest(url, ttl = CACHE_TTL) {
+  const cache = typeof caches !== 'undefined' ? caches.default : null;
+  if (!cache) return request(url);
+  const key = cacheRequest(`upstream/${encodeURIComponent(url)}`);
+  try {
+    const hit = await cache.match(key);
+    if (hit) return hit;
+  } catch (e) {}
+  const response = await request(url);
+  if (response.ok) {
+    try {
+      const copy = response.clone();
+      copy.headers.set('Cache-Control', `public, max-age=${ttl}`);
+      await cache.put(key, copy);
+    } catch (e) {}
+  }
+  return response;
+}
+
 async function request(url, { timeout = 15000, retries = 1 } = {}) {
   let lastError;
   for (let attempt = 0; attempt <= retries; attempt += 1) {
@@ -116,7 +141,7 @@ async function request(url, { timeout = 15000, retries = 1 } = {}) {
 
 export async function fetchDetails(pkg) {
   const url = `${BASE}/details?id=${encodeURIComponent(pkg)}`;
-  const response = await request(url);
+  const response = await cachedRequest(url);
   if (!response.ok) {
     throw new WorkerError(
       `小米应用商店没有找到 ${pkg}（HTTP ${response.status}）`,
@@ -210,7 +235,7 @@ export async function fetchDetails(pkg) {
 
 async function fetchCategoryApps(id, page) {
   const url = `${BASE}/categotyAllListApi?page=${page}&categoryId=${id}&pageSize=5000`;
-  const response = await request(url);
+  const response = await cachedRequest(url);
   if (!response.ok) return [];
   const json = await response.json();
   return Array.isArray(json.data) ? json.data : [];
@@ -662,17 +687,47 @@ async function handle(request) {
 
   const pkg = decodeURIComponent(match[1]);
   try {
+    const origin = `${url.protocol}//${url.host}`;
+    const cache = typeof caches !== 'undefined' ? caches.default : null;
+    const pageKey = cacheRequest(
+      `page/${encodeURIComponent(origin)}/${encodeURIComponent(pkg)}`,
+    );
+
+    if (cache) {
+      try {
+        const hit = await cache.match(pageKey);
+        if (hit) {
+          const headers = new Headers(hit.headers);
+          headers.set('X-Cache', 'HIT');
+          return new Response(hit.body, {
+            status: hit.status,
+            statusText: hit.statusText,
+            headers,
+          });
+        }
+      } catch (e) {}
+    }
+
     const { app } = await resolveApp(pkg);
-    const html = await renderPage(app, `${url.protocol}//${url.host}`);
-    return new Response(html, {
+    const cacheable = app.targetType === 'hash';
+    const html = await renderPage(app, origin);
+    const response = new Response(html, {
       headers: {
         'Content-Type': 'text/html; charset=utf-8',
-        'Cache-Control':
-          app.targetType === 'hash'
-            ? 'public, max-age=900, s-maxage=900'
-            : 'no-store',
+        'Cache-Control': cacheable
+          ? `public, max-age=${CACHE_TTL}, s-maxage=${CACHE_TTL}`
+          : 'no-store',
+        'X-Cache': 'MISS',
       },
     });
+
+    if (cacheable && cache) {
+      try {
+        await cache.put(pageKey, response.clone());
+      } catch (e) {}
+    }
+
+    return response;
   } catch (error) {
     return new Response(
       `<h1>解析失败</h1><p>${escapeHtml(error.message)}</p>`,
