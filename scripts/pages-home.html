@@ -252,11 +252,20 @@ html.theme-switching *,html.theme-switching *::before,html.theme-switching *::af
   function workerHref(pkg) {
     var href = WORKER ? WORKER + '/o/' + encodeURIComponent(pkg) : '#';
     if (!WORKER) return href;
-    var manual = '';
-    try { manual = localStorage.getItem(THEME_KEY) || ''; } catch (e) {}
-    if (manual === 'light' || manual === 'dark') {
-      href += '?theme=' + encodeURIComponent(manual);
+    var params = [];
+    var manualTheme = '';
+    var manualLang = '';
+    try {
+      manualTheme = localStorage.getItem(THEME_KEY) || '';
+      manualLang = localStorage.getItem(LANG_KEY) || '';
+    } catch (e) {}
+    if (manualTheme === 'light' || manualTheme === 'dark') {
+      params.push('theme=' + encodeURIComponent(manualTheme));
     }
+    if (manualLang === 'zh-Hans' || manualLang === 'zh-Hant' || manualLang === 'en') {
+      params.push('lang=' + encodeURIComponent(manualLang));
+    }
+    if (params.length) href += '?' + params.join('&');
     return href;
   }
 

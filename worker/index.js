@@ -332,12 +332,22 @@ async function renderPage(app, origin) {
 <script>
 (function () {
   try {
-    var qTheme = new URLSearchParams(location.search).get('theme');
-    if (qTheme === 'light' || qTheme === 'dark') {
+    var query = new URLSearchParams(location.search);
+    var qTheme = query.get('theme');
+    var qLang = query.get('lang');
+    var hasTheme = qTheme === 'light' || qTheme === 'dark';
+    var hasLang = qLang === 'zh-Hans' || qLang === 'zh-Hant' || qLang === 'en';
+    if (hasTheme) {
       try { localStorage.setItem('mi-theme', qTheme); } catch (e) {}
+    }
+    if (hasLang) {
+      try { localStorage.setItem('mi-lang', qLang); } catch (e) {}
+    }
+    if (hasTheme || hasLang) {
       try {
         var clean = new URL(location.href);
         clean.searchParams.delete('theme');
+        clean.searchParams.delete('lang');
         history.replaceState(null, '', clean);
       } catch (e) {}
     }
