@@ -284,6 +284,21 @@ html.theme-switching *,html.theme-switching *::before,html.theme-switching *::af
     return href;
   }
 
+  function rememberCurrentState() {
+    var manualTheme = '';
+    var manualLang = '';
+    try {
+      manualTheme = localStorage.getItem(THEME_KEY) || '';
+      manualLang = localStorage.getItem(LANG_KEY) || '';
+    } catch (e) {}
+    var next = new URL(location.href);
+    if (manualTheme === 'light' || manualTheme === 'dark') next.searchParams.set('theme', manualTheme);
+    else next.searchParams.delete('theme');
+    if (manualLang === 'zh-Hans' || manualLang === 'zh-Hant' || manualLang === 'en') next.searchParams.set('lang', manualLang);
+    else next.searchParams.delete('lang');
+    try { history.replaceState(null, '', next); } catch (e) {}
+  }
+
   function setActive(value) { document.body.classList.toggle('search-active', value); }
 
   function esc(value) {
@@ -413,6 +428,8 @@ html.theme-switching *,html.theme-switching *::before,html.theme-switching *::af
     run();
   });
   results.addEventListener('click', function (event) {
+    var link = event.target.closest('a.item');
+    if (link && WORKER) rememberCurrentState();
     if (event.target.closest('.item.disabled')) {
       event.preventDefault();
       status.textContent = t('noWorkerHint');
