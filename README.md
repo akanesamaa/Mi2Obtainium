@@ -227,14 +227,14 @@ URL：https://<Worker 地址>/o/<包名>
 - [Obtainium](https://github.com/ImranR98/Obtainium)
 - [HyperOS3EULocalization](https://github.com/LSHFGJ/HyperOS3EULocalization)
 
+## 友链
+
+- [linux.do](https://linux.do)
+
 ## License
 
 MIT
 
 仅用于个人学习与备份用途
-
----
-
-友情链接：[linux.do](https://linux.do)
 
 
