@@ -332,6 +332,15 @@ async function renderPage(app, origin) {
 <script>
 (function () {
   try {
+    var qTheme = new URLSearchParams(location.search).get('theme');
+    if (qTheme === 'light' || qTheme === 'dark') {
+      try { localStorage.setItem('mi-theme', qTheme); } catch (e) {}
+      try {
+        var clean = new URL(location.href);
+        clean.searchParams.delete('theme');
+        history.replaceState(null, '', clean);
+      } catch (e) {}
+    }
     var theme = localStorage.getItem('mi-theme');
     if (theme !== 'light' && theme !== 'dark') theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     document.documentElement.dataset.theme = theme;

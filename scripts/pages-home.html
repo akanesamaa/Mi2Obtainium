@@ -72,7 +72,7 @@ body.search-active .page{padding-top:8vh}
 :root[data-theme="dark"] .urlbar:focus-within{border-color:var(--muted2);box-shadow:0 2px 6px rgba(0,0,0,.24),0 16px 42px rgba(0,0,0,.36)}
 :root[data-theme="dark"] .results{box-shadow:0 18px 45px -24px rgba(0,0,0,.9)}
 @media(max-width:720px){.top-controls{top:12px;right:14px;gap:6px}.lang-switch{height:25px}.lang-switch button{padding:0 7px;font-size:10.5px}.theme-toggle{width:25px;height:25px}.page{width:calc(100% - 28px);padding:max(28px,calc(50vh - 72px)) 0 60px}body.search-active .page{padding-top:56px}.masthead h1{font-size:29px;letter-spacing:-1px}.search-section{max-width:none;margin-top:26px}.results{max-width:none}.status{max-width:none}.cat{display:none}.site-foot{margin-top:28px;font-size:10.5px}}
-@media(max-width:440px){.page{padding-top:max(24px,calc(50vh - 64px))}body.search-active .page{padding-top:52px}.masthead h1{font-size:26px}.urlbar input{font-size:12px}.urlbar button{width:40px;height:40px}}
+@media(max-width:440px){.page{padding-top:max(24px,calc(50vh - 64px))}body.search-active .page{padding-top:52px}.masthead h1{font-size:26px}.urlbar{gap:6px;padding-left:10px}.urlbar input{font-size:12px;letter-spacing:-.1px}.urlbar button{width:36px;height:40px}}
 @media(max-width:380px){.lang-switch button{padding:0 6px;font-size:10px}.masthead h1{font-size:23px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 html.theme-switching *,html.theme-switching *::before,html.theme-switching *::after{transition:none!important}
@@ -192,6 +192,9 @@ html.theme-switching *,html.theme-switching *::before,html.theme-switching *::af
       button.setAttribute('aria-label', label);
       button.setAttribute('title', label);
     }
+    document.querySelectorAll('[data-worker-pkg]').forEach(function (link) {
+      link.href = workerHref(link.getAttribute('data-worker-pkg'));
+    });
   }
 
   function applyLanguage(next, persist) {
@@ -233,7 +236,7 @@ html.theme-switching *,html.theme-switching *::before,html.theme-switching *::af
     var family = getComputedStyle(input).fontFamily;
     var size = 12;
     measureCtx.font = '400 ' + size + 'px ' + family;
-    while (size > 9.5 && measureCtx.measureText(input.placeholder || '').width > available) {
+    while (size > 8.5 && measureCtx.measureText(input.placeholder || '').width > available) {
       size -= 0.5;
       measureCtx.font = '400 ' + size + 'px ' + family;
     }
@@ -241,6 +244,21 @@ html.theme-switching *,html.theme-switching *::before,html.theme-switching *::af
   }
 
   window.addEventListener('resize', fitSearchText);
+  window.addEventListener('load', fitSearchText);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitSearchText);
+  input.addEventListener('focus', function () { input.style.fontSize = ''; });
+  input.addEventListener('blur', fitSearchText);
+
+  function workerHref(pkg) {
+    var href = WORKER ? WORKER + '/o/' + encodeURIComponent(pkg) : '#';
+    if (!WORKER) return href;
+    var manual = '';
+    try { manual = localStorage.getItem(THEME_KEY) || ''; } catch (e) {}
+    if (manual === 'light' || manual === 'dark') {
+      href += '?theme=' + encodeURIComponent(manual);
+    }
+    return href;
+  }
 
   function setActive(value) { document.body.classList.toggle('search-active', value); }
 
@@ -294,13 +312,13 @@ html.theme-switching *,html.theme-switching *::before,html.theme-switching *::af
 
   function item(app, direct) {
     var pkg = app.p;
-    var href = WORKER ? WORKER + '/o/' + encodeURIComponent(pkg) : '#';
+    var href = workerHref(pkg);
     var icon = String(app.i || '');
     if (icon.indexOf('http://') === 0) icon = 'https://' + icon.slice(7);
     var letter = String(app.n || pkg || '?').slice(0, 1);
     var name = direct ? pkg : (app.n || pkg);
     var category = direct ? t('direct') : (app.c || '');
-    return '<a class="item' + (WORKER ? '' : ' disabled') + '" href="' + esc(href) + '"' + (WORKER ? '' : ' data-disabled="1"') + '>' +
+    return '<a class="item' + (WORKER ? '' : ' disabled') + '" href="' + esc(href) + '" data-worker-pkg="' + esc(pkg) + '"' + (WORKER ? '' : ' data-disabled="1"') + '>' +
       '<span class="icon">' + esc(letter) + (icon ? '<img loading="lazy" src="' + esc(icon) + '" alt="" onerror="this.remove()">' : '') + '</span>' +
       '<span class="body"><strong>' + esc(name) + '</strong><small>' + esc(pkg) + '</small></span>' +
       '<span class="cat">' + esc(category) + '</span></a>';
