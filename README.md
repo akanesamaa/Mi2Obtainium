@@ -51,7 +51,7 @@
 
 ## 心路历程
 
-我的手机刷了 [xiaomi.eu](https://xiaomi.eu/)，就算装了小米应用商店也没法通过它安装软件，但我就是想用小米应用商店，就这样
+我的手机刷了 [xiaomi.eu](https://xiaomi.eu/)，就算装了小米应用商店也没法通过它安装软件，但我就是想用小米应用商店，就这样，就找到 [Obtainium](https://github.com/ImranR98/Obtainium) 这个折中方案，后面发现 Obtainium 里面没有小米应用商店源，就有了这个项目
 
 ## 实现原理
 
