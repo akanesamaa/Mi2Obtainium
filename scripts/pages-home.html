@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta id="themeColor" name="theme-color" content="#ffffff">
 <meta id="metaDescription" name="description" content="粘贴小米应用商店链接、包名或应用名称，生成 Obtainium 可直接读取的更新源。">
-<title>Mi2Obtainium</title>
-<link id="favicon" rel="icon" href="favicon-light.svg?v=3" type="image/svg+xml">
+<title>mi2obtainium</title>
+<link id="favicon" rel="icon" href="favicon-light.svg?v=4" type="image/svg+xml">
 <script>
 (function () {
   try {
@@ -29,7 +29,7 @@
     if (theme !== 'light' && theme !== 'dark') theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     document.documentElement.dataset.theme = theme;
     var favicon = document.getElementById('favicon');
-    if (favicon) favicon.href = theme === 'dark' ? 'favicon.svg?v=5' : 'favicon-light.svg?v=3';
+    if (favicon) favicon.href = theme === 'dark' ? 'favicon.svg?v=19' : 'favicon-light.svg?v=4';
     var lang = localStorage.getItem('mi-lang');
     if (lang !== 'zh-Hans' && lang !== 'zh-Hant' && lang !== 'en') {
       lang = 'zh-Hans';
@@ -139,7 +139,7 @@ html.theme-switching *,html.theme-switching *::before,html.theme-switching *::af
   var LANGS = ['zh-Hans', 'zh-Hant', 'en'];
   var STR = {
     'zh-Hans': {
-      pageTitle: 'Mi2Obtainium', storeName: '小米应用商店',
+      pageTitle: 'mi2obtainium', storeName: '小米应用商店',
       meta: '粘贴小米应用商店链接、包名或应用名称，生成 Obtainium 可直接读取的更新源。',
       placeholder: '粘贴 app.mi.com 链接、包名，或输入应用名称', searchAria: '搜索小米应用商店', search: '搜索',
       languageGroup: '语言', themeToDark: '切换深色模式', themeToLight: '切换浅色模式',
@@ -149,7 +149,7 @@ html.theme-switching *,html.theme-switching *::before,html.theme-switching *::af
       noWorker: ' · 还没有配置 WORKER_URL', noWorkerHint: '还没有配置 WORKER_URL · 先在 Pages 变量里设置 Worker 地址'
     },
     'zh-Hant': {
-      pageTitle: 'Mi2Obtainium', storeName: '小米應用商店',
+      pageTitle: 'mi2obtainium', storeName: '小米應用商店',
       meta: '貼上小米應用商店連結、套件名稱或應用程式名稱，產生 Obtainium 可直接讀取的更新來源。',
       placeholder: '貼上 app.mi.com 連結、套件名稱，或輸入應用程式名稱', searchAria: '搜尋小米應用商店', search: '搜尋',
       languageGroup: '語言', themeToDark: '切換深色模式', themeToLight: '切換淺色模式',
@@ -159,7 +159,7 @@ html.theme-switching *,html.theme-switching *::before,html.theme-switching *::af
       noWorker: ' · 尚未設定 WORKER_URL', noWorkerHint: '尚未設定 WORKER_URL · 先在 Pages 變數中設定 Worker 位址'
     },
     en: {
-      pageTitle: 'Mi2Obtainium', storeName: 'Xiaomi App Store',
+      pageTitle: 'mi2obtainium', storeName: 'Xiaomi App Store',
       meta: 'Paste a Xiaomi App Store link, package name, or app name to generate an update source Obtainium can read.',
       placeholder: 'Paste an app.mi.com link, package name, or app name', searchAria: 'Search Xiaomi App Store', search: 'Search',
       languageGroup: 'Language', themeToDark: 'Switch to dark mode', themeToLight: 'Switch to light mode',
@@ -200,7 +200,7 @@ html.theme-switching *,html.theme-switching *::before,html.theme-switching *::af
     var meta = document.getElementById('themeColor');
     if (meta) meta.setAttribute('content', theme === 'dark' ? '#0f0f10' : '#ffffff');
     var favicon = document.getElementById('favicon');
-    if (favicon) favicon.href = theme === 'dark' ? 'favicon.svg?v=5' : 'favicon-light.svg?v=3';
+    if (favicon) favicon.href = theme === 'dark' ? 'favicon.svg?v=19' : 'favicon-light.svg?v=4';
     var button = document.getElementById('themeToggle');
     if (button) {
       var label = theme === 'dark' ? t('themeToLight') : t('themeToDark');

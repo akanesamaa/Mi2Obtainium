@@ -2,7 +2,7 @@
 
 ## 项目背景
 
-Mi2Obtainium 解决 xiaomi.eu 上无法通过小米应用商店安装 APK 的问题，把小米应用商店页面转换成 Obtainium 可读取的更新源。
+mi2obtainium 解决 xiaomi.eu 上无法通过小米应用商店安装 APK 的问题，把小米应用商店页面转换成 Obtainium 可读取的更新源。
 
 当前架构只有：
 

@@ -1,7 +1,7 @@
 <h1 align="center">
-  <img src="public/favicon.svg" width="96" alt="Mi2Obtainium" />
+  <img src="public/favicon.svg" width="96" alt="mi2obtainium" />
   <br />
-  Mi2Obtainium
+  mi2obtainium
 </h1>
 
 <p align="center">

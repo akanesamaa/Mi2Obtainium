@@ -352,7 +352,7 @@ async function renderPage(app, origin) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta id="themeColor" name="theme-color" content="#ffffff">
-<link id="favicon" rel="icon" href="${PAGES_BASE}/favicon-light.svg?v=3" type="image/svg+xml">
+<link id="favicon" rel="icon" href="${PAGES_BASE}/favicon-light.svg?v=4" type="image/svg+xml">
 <title>${escapeHtml(app.name)} · Obtainium</title>
 <script>
 (function () {
@@ -380,7 +380,7 @@ async function renderPage(app, origin) {
     if (theme !== 'light' && theme !== 'dark') theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     document.documentElement.dataset.theme = theme;
     var favicon = document.getElementById('favicon');
-    if (favicon) favicon.href = theme === 'dark' ? '${PAGES_BASE}/favicon.svg?v=18' : '${PAGES_BASE}/favicon-light.svg?v=3';
+    if (favicon) favicon.href = theme === 'dark' ? '${PAGES_BASE}/favicon.svg?v=19' : '${PAGES_BASE}/favicon-light.svg?v=4';
     var lang = localStorage.getItem('mi-lang');
     if (lang !== 'zh-Hans' && lang !== 'zh-Hant' && lang !== 'en') {
       lang = 'zh-Hans';
@@ -550,7 +550,7 @@ async function renderPage(app, origin) {
     var meta = document.getElementById('themeColor');
     if (meta) meta.setAttribute('content', theme === 'dark' ? '#0f0f10' : '#ffffff');
     var favicon = document.getElementById('favicon');
-    if (favicon) favicon.href = theme === 'dark' ? '${PAGES_BASE}/favicon.svg?v=18' : '${PAGES_BASE}/favicon-light.svg?v=3';
+    if (favicon) favicon.href = theme === 'dark' ? '${PAGES_BASE}/favicon.svg?v=19' : '${PAGES_BASE}/favicon-light.svg?v=4';
     var button = document.getElementById('themeToggle');
     if (button) {
       var label = theme === 'dark' ? t('themeToLight') : t('themeToDark');
