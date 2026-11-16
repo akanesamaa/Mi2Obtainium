@@ -233,4 +233,8 @@ MIT
 
 仅用于个人学习与备份用途
 
+---
+
+友情链接：[linux.do](https://linux.do)
+
 
