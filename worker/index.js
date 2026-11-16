@@ -353,7 +353,7 @@ async function renderPage(app, origin) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta id="themeColor" name="theme-color" content="#ffffff">
 <link id="favicon" rel="icon" href="${PAGES_BASE}/favicon-light.svg?v=4" type="image/svg+xml">
-<title>${escapeHtml(app.name)} · Obtainium</title>
+<title>${escapeHtml(app.name)} · mi2obtainium</title>
 <script>
 (function () {
   try {
