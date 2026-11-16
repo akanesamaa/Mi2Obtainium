@@ -2,7 +2,7 @@ import QRCode from 'qrcode/lib/browser.js';
 
 const BASE = 'https://app.mi.com';
 const CDN_HOST = 'https://f5.market.xiaomi.com/download/';
-const PAGES_BASE = 'https://akanesamaa.github.io/Mi2Obtainium';
+const PAGES_BASE = 'https://akanesamaa.github.io/mi2obtainium';
 const CACHE_ORIGIN = 'https://cache.mi2obtainium.internal';
 const CACHE_TTL = 900;
 const UA =
@@ -765,6 +765,7 @@ export default {
     return handle(request);
   },
 };
+
 
 
 

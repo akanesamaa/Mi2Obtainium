@@ -9,13 +9,13 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/akanesamaa/Mi2Obtainium">GitHub</a>
+  <a href="https://github.com/akanesamaa/mi2obtainium">GitHub</a>
   ·
-  <a href="https://akanesamaa.github.io/Mi2Obtainium/">在线使用</a>
+  <a href="https://akanesamaa.github.io/mi2obtainium/">在线使用</a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/akanesamaa/Mi2Obtainium">
+  <a href="https://github.com/akanesamaa/mi2obtainium">
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" />
   </a>
   <a href="https://workers.cloudflare.com/">
@@ -27,7 +27,7 @@
 </p>
 
 <p align="center">
-  <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/akanesamaa/Mi2Obtainium">
+  <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/akanesamaa/mi2obtainium">
     <img src="https://deploy.workers.cloudflare.com/button" alt="Deploy to Cloudflare" />
   </a>
 </p>
@@ -223,4 +223,5 @@ URL：https://<Worker 地址>/o/<包名>
 MIT
 
 仅用于个人学习与备份用途
+
 
