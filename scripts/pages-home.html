@@ -10,6 +10,21 @@
 <script>
 (function () {
   try {
+    var incoming = new URLSearchParams(location.search);
+    var incomingTheme = incoming.get('theme');
+    var incomingLang = incoming.get('lang');
+    var hasIncomingTheme = incomingTheme === 'light' || incomingTheme === 'dark';
+    var hasIncomingLang = incomingLang === 'zh-Hans' || incomingLang === 'zh-Hant' || incomingLang === 'en';
+    if (hasIncomingTheme) localStorage.setItem('mi-theme', incomingTheme);
+    if (hasIncomingLang) localStorage.setItem('mi-lang', incomingLang);
+    if (hasIncomingTheme || hasIncomingLang) {
+      try {
+        var clean = new URL(location.href);
+        clean.searchParams.delete('theme');
+        clean.searchParams.delete('lang');
+        history.replaceState(null, '', clean);
+      } catch (e) {}
+    }
     var theme = localStorage.getItem('mi-theme');
     if (theme !== 'light' && theme !== 'dark') theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     document.documentElement.dataset.theme = theme;

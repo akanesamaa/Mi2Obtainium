@@ -1,5 +1,18 @@
 # 项目约定
 
+## 项目背景
+
+Mi2Obtainium 解决 Xiaomi.eu 上无法通过小米应用商店安装 APK 的问题，把小米应用商店页面转换成 Obtainium 可读取的更新源。
+
+当前架构只有：
+
+- GitHub Pages：搜索首页、搜索索引、共享 CSS / 字体
+- Cloudflare Worker：解析、二维码、缓存
+
+本地 Node 服务、Docker、本地 UI 已删除，不要重新引入。
+
+详细决策和踩坑记录见 [docs/decision-log.md](docs/decision-log.md)。
+
 ## Push 前必须验收
 
 每次 push 前，先完成桌面端和手机端验收，再提交和推送。

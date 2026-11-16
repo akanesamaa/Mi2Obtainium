@@ -413,7 +413,7 @@ async function renderPage(app, origin) {
 
 <main class="page">
   <header class="masthead">
-    <h1><a href="${PAGES_BASE}/"><span class="title-xiaomi" id="storeTitle">小米应用商店</span><span class="title-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"></path></svg></span><span class="title-obtainium">Obtainium</span></a></h1>
+    <h1><a id="homeLink" href="${PAGES_BASE}/"><span class="title-xiaomi" id="storeTitle">小米应用商店</span><span class="title-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"></path></svg></span><span class="title-obtainium">Obtainium</span></a></h1>
   </header>
 
   <section class="result">
@@ -517,6 +517,26 @@ async function renderPage(app, origin) {
   var themeTimer = null;
   var lastThemeToggleAt = 0;
 
+  function homeHref() {
+    var params = [];
+    var theme = '';
+    var savedLang = '';
+    try {
+      theme = localStorage.getItem(THEME_KEY) || '';
+      savedLang = localStorage.getItem(LANG_KEY) || '';
+    } catch (e) {}
+    if (theme === 'light' || theme === 'dark') params.push('theme=' + encodeURIComponent(theme));
+    if (savedLang === 'zh-Hans' || savedLang === 'zh-Hant' || savedLang === 'en') {
+      params.push('lang=' + encodeURIComponent(savedLang));
+    }
+    return '${PAGES_BASE}/' + (params.length ? '?' + params.join('&') : '');
+  }
+
+  function updateHomeLink() {
+    var link = document.getElementById('homeLink');
+    if (link) link.href = homeHref();
+  }
+
   function applyTheme(next, persist, immediate) {
     var theme = next === 'dark' ? 'dark' : 'light';
     var root = document.documentElement;
@@ -537,6 +557,7 @@ async function renderPage(app, origin) {
       button.setAttribute('aria-label', label);
       button.setAttribute('title', label);
     }
+    updateHomeLink();
   }
 
   function applyLanguage(next, persist) {
