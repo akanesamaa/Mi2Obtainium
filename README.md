@@ -26,12 +26,6 @@
   </a>
 </p>
 
-<p align="center">
-  <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/akanesamaa/mi2obtainium">
-    <img src="https://deploy.workers.cloudflare.com/button" alt="Deploy to Cloudflare" />
-  </a>
-</p>
-
 <hr />
 
 - 能搜约 2.7 万个小米应用，中文名、包名都能搜
@@ -109,7 +103,21 @@ Worker 只负责查地址，不托管 APK 文件
 
 ### 1 部署 Worker
 
-仓库需要是 public，然后点顶部的 **Deploy to Cloudflare** 按钮，或者本地执行：
+#### 方式 A：Cloudflare 控制台连接 Git
+
+1. Workers & Pages → **Create** → **Worker** → **Connect to Git**
+2. 选择仓库 `akanesamaa/mi2obtainium`，分支 `main`
+3. 根目录留空
+4. 构建命令留空
+5. 部署命令填：
+
+```bash
+npx wrangler deploy
+```
+
+6. 点 Deploy
+
+#### 方式 B：命令行
 
 ```bash
 npx wrangler login
@@ -185,7 +193,8 @@ URL：https://<Worker 地址>/o/<包名>
 - `packages.json` 是空的，Actions 直接失败
 - 改了 Worker 地址但没更新 `WORKER_URL`
 - 改了 Pages 地址但没更新 `PAGES_BASE`
-- 仓库不是 public，Cloudflare 部署按钮用不了
+- Cloudflare 的 Git 连接没有授权对应仓库
+- 构建命令没有留空，导致 Worker 构建失败
 
 ## 常见问题
 
