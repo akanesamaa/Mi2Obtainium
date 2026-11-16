@@ -38,6 +38,7 @@
 - 打开结果页时，Cloudflare Worker 去小米商店现查版本和下载地址
 - 能直接加进 Obtainium，也能手动填 HTML 源
 - 支持简中 / 繁中 / EN，浅色 / 深色
+- Worker 默认缓存解析结果 15 分钟，命中后不再请求小米
 - APK 由手机直接从小米下载服务器下载，不经过中转服务器
 
 <p align="center">
