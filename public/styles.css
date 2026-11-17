@@ -544,12 +544,25 @@ body.modal-open { overflow: hidden; }
   font-weight: 700;
 }
 
-.pkg {
-  margin: 3px 0 0;
+.meta-item .pkg {
+  display: block;
+  margin: 0;
+  min-width: 0;
+  max-width: 100%;
   font-family: var(--mono);
   font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.45;
   color: var(--muted);
-  word-break: break-all;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  text-overflow: clip;
+  word-break: normal;
+  overflow-wrap: normal;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+  -webkit-overflow-scrolling: touch;
 }
 
 .byline {
@@ -567,7 +580,7 @@ body.modal-open { overflow: hidden; }
 
 .meta-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   margin-top: 20px;
 }
@@ -753,7 +766,6 @@ body.modal-open { overflow: hidden; }
   .result-actions { flex: 1 0 100%; width: auto; }
   .result-actions .btn { flex: 1; }
   .meta-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .meta-grid .meta-item:last-child { grid-column: 1 / -1; }
   .result-body { grid-template-columns: 1fr; }
   .s-cat { display: none; }
 }

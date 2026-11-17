@@ -396,7 +396,7 @@ async function renderPage(app, origin) {
   } catch (error) {}
 })();
 </script>
-<link rel="stylesheet" href="${PAGES_BASE}/styles.css?v=33">
+<link rel="stylesheet" href="${PAGES_BASE}/styles.css?v=34">
 </head>
 <body class="search-active" data-app-type="${escapeHtml(app.targetType)}">
 <div class="top-controls">
@@ -425,9 +425,7 @@ async function renderPage(app, origin) {
       <div class="result-title">
         <div class="title-line">
           <h2>${escapeHtml(app.name)}</h2>
-          <span class="version-badge">v${escapeHtml(app.version)}</span>
         </div>
-        <p class="pkg">${escapeHtml(app.pkg)}</p>
         <p class="byline">${escapeHtml(app.author)}${app.category ? ` · ${escapeHtml(app.category)}` : ''}</p>
       </div>
       <div class="result-actions">
@@ -439,6 +437,7 @@ async function renderPage(app, origin) {
 
     <div class="meta-grid">
       <div class="meta-item"><span data-i18n="version">版本</span><strong>${escapeHtml(app.version)}</strong></div>
+      <div class="meta-item"><span data-i18n="packageName">包名</span><strong class="pkg" title="${escapeHtml(app.pkg)}">${escapeHtml(app.pkg)}</strong></div>
       <div class="meta-item"><span data-i18n="size">大小</span><strong id="sizeValue" data-empty="${app.sizeText ? '0' : '1'}">${escapeHtml(app.sizeText || '未知')}</strong></div>
       <div class="meta-item"><span data-i18n="updated">更新日期</span><strong id="updatedValue" data-empty="${app.updated ? '0' : '1'}">${escapeHtml(app.updated || '未知')}</strong></div>
     </div>
@@ -453,10 +452,6 @@ async function renderPage(app, origin) {
           <span class="label" data-i18n="htmlSource">HTML 源</span>
           <code title="${escapeHtml(pageUrl)}" tabindex="0">${escapeHtml(pageUrl)}</code>
           <button class="icon-btn" id="copySource" type="button" data-copy="${escapeHtml(pageUrl)}">复制</button>
-        </div>
-        <div class="source-box">
-          <span class="label" data-i18n="packageName">包名</span>
-          <code>${escapeHtml(app.pkg)}</code>
         </div>
       </div>
     </div>
